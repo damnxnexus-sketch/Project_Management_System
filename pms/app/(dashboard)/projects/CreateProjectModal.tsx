@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { createProjectAction } from '@/actions/projectActions';
 
-export function CreateProjectModal() {
+export function CreateProjectModal({ users = [] }: { users?: { id: string, name: string }[] }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
   const [error, setError] = React.useState('');
@@ -65,6 +65,21 @@ export function CreateProjectModal() {
                   placeholder="Brief overview of the project..." 
                   className="flex min-h-[100px] w-full rounded-md border border-[var(--border-color)] bg-[var(--background)]/50 px-3 py-2 text-sm placeholder:text-[var(--muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                 />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-[var(--foreground)]">Deadline</label>
+                <Input name="deadline" type="date" required className="bg-[var(--background)]/50" />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-[var(--foreground)]">Assign Team</label>
+                <select name="assigneeId" multiple className="flex min-h-[80px] w-full rounded-md border border-[var(--border-color)] bg-[var(--background)]/50 px-3 py-2 text-sm text-[var(--foreground)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]">
+                  {users.map(u => (
+                    <option key={u.id} value={u.id}>{u.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-[var(--muted)] mt-1">Hold Cmd/Ctrl to select multiple</p>
               </div>
 
               <div className="mt-4 flex justify-end gap-3">

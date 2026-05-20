@@ -7,7 +7,9 @@ import { deleteProject } from '@/actions/projectActions';
 export function DeleteProjectButton({ projectId }: { projectId: string }) {
   const [isPending, startTransition] = React.useTransition();
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (confirm('Are you sure you want to delete this project? Tasks inside will be unlinked.')) {
       startTransition(async () => {
         await deleteProject(projectId);
