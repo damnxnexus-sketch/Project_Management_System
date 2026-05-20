@@ -1,13 +1,42 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopNav } from "@/components/layout/TopNav";
+import { StoreInitializer } from "@/components/providers/StoreInitializer";
+import { getSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+  let currentUser = null;
+  let allUsers = [];
+
+  if (session) {
+    const user = await prisma.user.findUnique({ where: { id: session.userId } });
+    if (user) {
+      currentUser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role as any,
+        avatar: user.avatar || ''
+      };
+    }
+    const dbUsers = await prisma.user.findMany();
+    allUsers = dbUsers.map(u => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role as any,
+      avatar: u.avatar || ''
+    }));
+  }
+
   return (
     <div className="flex min-h-screen">
+      {currentUser && <StoreInitializer currentUser={currentUser} allUsers={allUsers} />}
       <Sidebar />
       <div className="flex w-full flex-col">
         <TopNav />

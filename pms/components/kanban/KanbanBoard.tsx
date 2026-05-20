@@ -15,10 +15,18 @@ const columns: { id: TaskStatus; title: string }[] = [
   { id: 'done', title: 'Done' },
 ];
 
-export function KanbanBoard() {
+export function KanbanBoard({ initialDbTasks }: { initialDbTasks?: Task[] }) {
   const isMounted = useMounted();
   const tasks = useStore((state) => state.tasks);
   const moveTask = useStore((state) => state.moveTask);
+  const setTasks = useStore((state) => state.setTasks);
+
+  React.useEffect(() => {
+    if (initialDbTasks && initialDbTasks.length > 0) {
+      // Merge logic: in a real app we'd fully sync. For MVP, overwrite.
+      setTasks(initialDbTasks);
+    }
+  }, [initialDbTasks, setTasks]);
 
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;

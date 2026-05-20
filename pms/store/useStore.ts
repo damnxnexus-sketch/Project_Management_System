@@ -11,6 +11,7 @@ interface AppState {
   updateTask: (taskId: string, updates: Partial<Task>) => void;
   moveTask: (taskId: string, newStatus: TaskStatus) => void;
   addUser: (user: User) => void;
+  setUsers: (users: User[]) => void;
   setCurrentUser: (user: User | null) => void;
   generateAITasks: (prompt: string) => Promise<void>;
   isSidebarOpen: boolean;
@@ -76,6 +77,7 @@ export const useStore = create<AppState>()(
           tasks: state.tasks.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)),
         })),
       addUser: (user) => set((state) => ({ users: [...state.users, user] })),
+      setUsers: (users) => set({ users }),
       setCurrentUser: (user) => set({ currentUser: user }),
       toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 
