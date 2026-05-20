@@ -50,12 +50,12 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--foreground)]">Email</label>
+            <label className="text-sm font-medium text-[var(--foreground)]">Email Address / ID</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" size={16} />
               <Input
                 name="email"
-                type="email"
+                type="text"
                 required
                 placeholder="you@agency.com"
                 className="pl-9 bg-[var(--background)]/50"
@@ -75,22 +75,6 @@ export default function LoginPage() {
                 className="pl-9 bg-[var(--background)]/50"
               />
             </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--foreground)]">Role (For Auto-Registration)</label>
-            <div className="relative">
-              <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" size={16} />
-              <select
-                name="role"
-                className="flex h-10 w-full rounded-md border border-[var(--border-color)] bg-[var(--background)]/50 px-3 pl-9 py-2 text-sm text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] transition-colors appearance-none"
-              >
-                <option value="Worker" className="bg-[var(--background)]">Worker</option>
-                <option value="Admin" className="bg-[var(--background)]">Admin</option>
-                <option value="Master Admin" className="bg-[var(--background)]">Master Admin</option>
-              </select>
-            </div>
-            <p className="text-xs text-[var(--muted)]">If account doesn't exist, it will be created with this role.</p>
           </div>
 
           <Button type="submit" className="mt-2 w-full" disabled={isPending}>

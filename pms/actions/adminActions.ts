@@ -8,13 +8,14 @@ export async function createUserAction(formData: FormData) {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const role = formData.get('role') as string;
+  const password = formData.get('password') as string;
 
-  if (!name || !email) return { error: 'Name and email are required' };
+  if (!name || !email || !password) return { error: 'Name, email, and password are required' };
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) return { error: 'User already exists' };
 
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   await prisma.user.create({
     data: {

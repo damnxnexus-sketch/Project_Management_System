@@ -25,14 +25,24 @@ export function TeamManagementClient({ users, isMasterAdmin }: TeamManagementCli
   const [newEmail, setNewEmail] = React.useState('');
   const [newRole, setNewRole] = React.useState<Role>('Worker');
 
-  const handleCreateUser = (e: React.FormEvent) => {
+  const handleCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newName || !newEmail) return;
+
+    const form = e.currentTarget;
+    const passwordInput = form.elements.namedItem('password') as HTMLInputElement;
+    const password = passwordInput?.value;
+
+    if (!password) {
+      alert('Password is required');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('name', newName);
     formData.append('email', newEmail);
     formData.append('role', newRole);
+    formData.append('password', password);
 
     startTransition(async () => {
       const result = await createUserAction(formData);
@@ -119,18 +129,29 @@ export function TeamManagementClient({ users, isMasterAdmin }: TeamManagementCli
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--foreground)]">Email Address</label>
+            <label className="text-sm font-medium text-[var(--foreground)]">Email Address / ID</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" size={16} />
               <Input
                 required
-                type="email"
+                type="text"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="jane@agency.com"
                 className="pl-9"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--foreground)]">Password</label>
+            <Input
+              required
+              name="password"
+              type="text"
+              placeholder="Assign a secure password"
+              className="bg-[var(--background)]/50"
+            />
           </div>
 
           <div className="space-y-2">
@@ -151,7 +172,7 @@ export function TeamManagementClient({ users, isMasterAdmin }: TeamManagementCli
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Sending...' : 'Send Invite'}
+              {isPending ? 'Creating...' : 'Create Account'}
             </Button>
           </div>
         </form>
