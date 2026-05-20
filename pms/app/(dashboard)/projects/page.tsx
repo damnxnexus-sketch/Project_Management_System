@@ -9,8 +9,19 @@ export default async function ProjectsPage() {
   const session = await getSession();
   if (!session) redirect('/login');
 
+  const isWorker = session.role === 'Worker';
+
   const projects = await prisma.project.findMany({
-    include: { tasks: true }
+    where: isWorker ? {
+      tasks: {
+        some: { assigneeId: session.userId as string }
+      }
+    } : {},
+    include: {
+      tasks: isWorker ? {
+        where: { assigneeId: session.userId as string }
+      } : true
+    }
   });
 
   return (

@@ -7,7 +7,11 @@ export default async function Home() {
   const session = await getSession();
   if (!session) redirect('/login');
 
-  const tasks = await prisma.task.findMany();
+  const taskWhereClause = session.role === 'Worker' ? { assigneeId: session.userId as string } : {};
+
+  const tasks = await prisma.task.findMany({
+    where: taskWhereClause,
+  });
   
   const formattedTasks = tasks.map(t => ({
     id: t.id,
