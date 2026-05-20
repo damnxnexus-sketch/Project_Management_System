@@ -16,6 +16,8 @@ export default async function Home() {
     status: t.status,
     priority: t.priority,
     aiRisk: t.aiRisk,
+    progress: t.progress,
+    projectId: t.projectId,
     dueDate: t.dueDate ? t.dueDate.toISOString() : undefined,
     assigneeId: t.assigneeId
   }));

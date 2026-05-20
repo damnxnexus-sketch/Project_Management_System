@@ -68,6 +68,14 @@ export function AllotmentForm({ users }: { users: UserData[] }) {
           <Input name="title" type="text" required placeholder="e.g. Design Landing Page" className="bg-[var(--background)]/50" />
         </div>
 
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-[var(--foreground)] flex items-center gap-2">
+            <Type size={16} className="text-[var(--muted)]" />
+            Description
+          </label>
+          <textarea name="description" required placeholder="Detailed task description..." className="flex min-h-[80px] w-full rounded-md border border-[var(--border-color)] bg-[var(--background)]/50 px-3 py-2 text-sm placeholder:text-[var(--muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]" />
+        </div>
+
         {message && (
           <div className={`p-3 rounded-md text-sm text-center ${message.includes('Error') ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
             {message}

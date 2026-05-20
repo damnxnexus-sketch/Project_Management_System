@@ -15,7 +15,15 @@ export default async function AllotmentPage() {
     );
   }
 
+  let whereClause = {};
+  if (session.role === 'Admin') {
+    whereClause = { role: 'Worker' };
+  } else if (session.role === 'Master Admin') {
+    whereClause = { role: { in: ['Worker', 'Admin'] } };
+  }
+
   const users = await prisma.user.findMany({
+    where: whereClause,
     select: { id: true, name: true, role: true, avatar: true },
   });
 

@@ -20,6 +20,8 @@ export interface Task {
   assigneeId?: string;
   dueDate?: string;
   aiRisk?: boolean; // If true, indicates 'High Risk of Delay'
+  progress: number;
+  projectId?: string;
 }
 
 export interface Project {

@@ -7,9 +7,25 @@ import { useStore } from '@/store/useStore';
 import { Calendar, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import { updateTaskProgress } from '@/actions/taskActions';
+
 export function TaskCard({ task, index }: { task: Task; index: number }) {
   const users = useStore((state) => state.users);
   const assignee = users.find((u) => u.id === task.assigneeId);
+  const [progress, setProgress] = React.useState(task.progress || 0);
+  const [isPending, startTransition] = React.useTransition();
+
+  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProgress(parseInt(e.target.value));
+  };
+
+  const handleProgressCommit = () => {
+    if (progress !== task.progress) {
+      startTransition(async () => {
+        await updateTaskProgress(task.id, progress);
+      });
+    }
+  };
 
   return (
     <Draggable draggableId={task.id} index={index}>
@@ -20,7 +36,8 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
           {...provided.dragHandleProps}
           className={cn(
             'group relative mb-3 rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-4 shadow-sm transition-colors hover:border-[var(--muted)]',
-            snapshot.isDragging && 'border-[var(--accent)] shadow-xl z-50 rotate-2'
+            snapshot.isDragging && 'border-[var(--accent)] shadow-xl z-50 rotate-2',
+            isPending && 'opacity-70'
           )}
         >
           {task.aiRisk && (
@@ -35,6 +52,23 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
           
           <div className="mb-4">
             <p className="text-xs text-[var(--muted)] line-clamp-2">{task.description}</p>
+          </div>
+
+          <div className="mb-4 group-hover:opacity-100 opacity-60 transition-opacity">
+            <div className="flex justify-between text-xs text-[var(--muted)] mb-1">
+              <span>Progress</span>
+              <span>{progress}%</span>
+            </div>
+            <input 
+              type="range" 
+              min="0" 
+              max="100" 
+              value={progress}
+              onChange={handleProgressChange}
+              onMouseUp={handleProgressCommit}
+              onTouchEnd={handleProgressCommit}
+              className="w-full h-1 bg-[var(--border-color)] rounded-lg appearance-none cursor-pointer accent-[var(--accent)]"
+            />
           </div>
 
           <div className="flex items-center justify-between mt-auto">

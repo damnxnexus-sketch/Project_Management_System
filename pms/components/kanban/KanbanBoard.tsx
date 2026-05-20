@@ -5,7 +5,7 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { KanbanColumn } from './KanbanColumn';
 import { AiPrompt } from '@/components/ai/AiPrompt';
 import { useStore } from '@/store/useStore';
-import { TaskStatus } from '@/types';
+import { TaskStatus, Task } from '@/types';
 import { useMounted } from '@/hooks/useMounted';
 
 const columns: { id: TaskStatus; title: string }[] = [
