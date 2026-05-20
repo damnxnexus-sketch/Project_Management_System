@@ -7,6 +7,7 @@ import { AiPrompt } from '@/components/ai/AiPrompt';
 import { useStore } from '@/store/useStore';
 import { TaskStatus, Task } from '@/types';
 import { useMounted } from '@/hooks/useMounted';
+import { updateTaskStatus } from '@/actions/taskActions';
 
 const columns: { id: TaskStatus; title: string }[] = [
   { id: 'todo', title: 'To Do' },
@@ -39,7 +40,13 @@ export function KanbanBoard({ initialDbTasks }: { initialDbTasks?: Task[] }) {
       return;
     }
 
+    // Optimistic local update
     moveTask(draggableId, destination.droppableId as TaskStatus);
+    
+    // Server update
+    React.startTransition(() => {
+      updateTaskStatus(draggableId, destination.droppableId);
+    });
   };
 
   if (!isMounted) return null;

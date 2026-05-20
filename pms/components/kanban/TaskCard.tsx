@@ -4,10 +4,9 @@ import { Task } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { useStore } from '@/store/useStore';
-import { Calendar, Sparkles } from 'lucide-react';
+import { Calendar, Sparkles, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-import { updateTaskProgress } from '@/actions/taskActions';
+import { updateTaskProgress, deleteTask } from '@/actions/taskActions';
 
 export function TaskCard({ task, index }: { task: Task; index: number }) {
   const users = useStore((state) => state.users);
@@ -25,6 +24,12 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
         await updateTaskProgress(task.id, progress);
       });
     }
+  };
+
+  const handleDelete = () => {
+    startTransition(async () => {
+      await deleteTask(task.id);
+    });
   };
 
   return (
@@ -47,7 +52,13 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
           )}
           
           <div className="mb-3 flex items-start justify-between gap-2">
-            <h4 className="text-sm font-medium text-[var(--foreground)]">{task.title}</h4>
+            <h4 className="text-sm font-medium text-[var(--foreground)] pr-6">{task.title}</h4>
+            <button 
+              onClick={handleDelete}
+              className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-[var(--muted)] hover:text-red-500"
+            >
+              <Trash2 size={14} />
+            </button>
           </div>
           
           <div className="mb-4">

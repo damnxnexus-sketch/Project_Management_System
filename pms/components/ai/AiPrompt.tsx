@@ -6,6 +6,8 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { cn } from '@/lib/utils';
 
+import { createAiTasks } from '@/actions/taskActions';
+
 export function AiPrompt() {
   const [prompt, setPrompt] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -16,7 +18,40 @@ export function AiPrompt() {
     if (!prompt.trim() || isLoading) return;
 
     setIsLoading(true);
-    await generateAITasks(prompt);
+    // Let the store generate and return the tasks locally.
+    // Wait, generateAITasks currently returns Promise<void> and updates store.
+    // We can just rely on the store to give us the tasks? No, we need the exact new tasks.
+    // Let's generate them here directly!
+    const newTasks = [
+      {
+        title: `Analyze: ${prompt.slice(0, 20)}...`,
+        description: 'AI generated task based on your prompt.',
+        status: 'todo',
+        priority: 'high',
+        aiRisk: false,
+        progress: 0,
+      },
+      {
+        title: 'Draft Action Plan',
+        description: 'AI generated task',
+        status: 'todo',
+        priority: 'medium',
+        aiRisk: false,
+        progress: 0,
+      },
+      {
+        title: 'Review Deliverables',
+        description: 'AI generated task',
+        status: 'todo',
+        priority: 'low',
+        aiRisk: true,
+        progress: 0,
+      },
+    ];
+
+    await createAiTasks(newTasks);
+    // The server action revalidates the path, so the page will reload with new tasks from DB.
+    
     setIsLoading(false);
     setPrompt('');
   };

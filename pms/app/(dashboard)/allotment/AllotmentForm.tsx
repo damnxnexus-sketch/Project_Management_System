@@ -4,13 +4,14 @@ import * as React from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { assignDailyTask } from '@/actions/taskActions';
-import { Calendar, User as UserIcon, Type } from 'lucide-react';
+import { Calendar, User as UserIcon, Type, FolderKanban } from 'lucide-react';
 import { Avatar } from '@/components/ui/Avatar';
 import { useTransition } from 'react';
 
 type UserData = { id: string; name: string; role: string; avatar: string | null };
+type ProjectData = { id: string; name: string };
 
-export function AllotmentForm({ users }: { users: UserData[] }) {
+export function AllotmentForm({ users, projects }: { users: UserData[], projects: ProjectData[] }) {
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = React.useState('');
 
@@ -52,12 +53,30 @@ export function AllotmentForm({ users }: { users: UserData[] }) {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--foreground)] flex items-center gap-2">
-            <Calendar size={16} className="text-[var(--muted)]" />
-            Allotment Date
-          </label>
-          <Input name="date" type="date" required className="bg-[var(--background)]/50" defaultValue={new Date().toISOString().split('T')[0]} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--foreground)] flex items-center gap-2">
+              <Calendar size={16} className="text-[var(--muted)]" />
+              Allotment Date
+            </label>
+            <Input name="date" type="date" required className="bg-[var(--background)]/50" defaultValue={new Date().toISOString().split('T')[0]} />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--foreground)] flex items-center gap-2">
+              <FolderKanban size={16} className="text-[var(--muted)]" />
+              Project (Optional)
+            </label>
+            <select
+              name="projectId"
+              className="flex h-10 w-full rounded-md border border-[var(--border-color)] bg-[var(--background)]/50 px-3 py-2 text-sm text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] transition-colors appearance-none"
+            >
+              <option value="" className="bg-[var(--background)]">No Project</option>
+              {projects.map(p => (
+                <option key={p.id} value={p.id} className="bg-[var(--background)]">{p.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="space-y-2">

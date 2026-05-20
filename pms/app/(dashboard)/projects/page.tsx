@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma';
 import { FolderKanban, Plus } from 'lucide-react';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { CreateProjectModal } from './CreateProjectModal';
+import { DeleteProjectButton } from './DeleteProjectButton';
 
 export default async function ProjectsPage() {
   const session = await getSession();
@@ -22,10 +24,7 @@ export default async function ProjectsPage() {
           <p className="text-[var(--muted)]">Overview of all ongoing agency projects.</p>
         </div>
         {session.role !== 'Worker' && (
-          <button className="flex items-center justify-center gap-2 rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity whitespace-nowrap">
-            <Plus size={16} />
-            New Project
-          </button>
+          <CreateProjectModal />
         )}
       </div>
 
@@ -47,10 +46,13 @@ export default async function ProjectsPage() {
             return (
               <div key={project.id} className="rounded-xl border border-[var(--border-color)] bg-[var(--glass-bg)] p-6 hover:border-[var(--muted)] transition-colors">
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-semibold text-[var(--foreground)]">{project.name}</h3>
-                  <span className={`px-2 py-1 rounded-full text-[10px] font-medium uppercase ${project.status === 'active' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-orange-500/10 text-orange-500'}`}>
-                    {project.status}
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <h3 className="font-semibold text-[var(--foreground)]">{project.name}</h3>
+                    <span className={`self-start px-2 py-0.5 rounded-full text-[10px] font-medium uppercase ${project.status === 'active' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-orange-500/10 text-orange-500'}`}>
+                      {project.status}
+                    </span>
+                  </div>
+                  {session.role !== 'Worker' && <DeleteProjectButton projectId={project.id} />}
                 </div>
                 <p className="text-sm text-[var(--muted)] mb-6 line-clamp-2">{project.description}</p>
                 
