@@ -11,10 +11,10 @@ export default async function DashboardLayout({
 }) {
   const session = await getSession();
   let currentUser = null;
-  let allUsers = [];
+  let allUsers: any[] = [];
 
   if (session) {
-    const user = await prisma.user.findUnique({ where: { id: session.userId } });
+    const user = await prisma.user.findUnique({ where: { id: session.userId as string } });
     if (user) {
       currentUser = {
         id: user.id,
