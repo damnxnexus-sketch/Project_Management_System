@@ -42,7 +42,7 @@ export function AllotmentForm({ users, projects }: { users: UserData[], projects
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto p-1">
             {users.map(user => (
               <label key={user.id} className="flex items-center gap-3 rounded-lg border border-[var(--border-color)] p-3 hover:bg-[var(--background)]/50 cursor-pointer has-[:checked]:border-[var(--accent)] has-[:checked]:bg-[var(--accent)]/10 transition-colors">
-                <input type="radio" name="assigneeId" value={user.id} required className="hidden" />
+                <input type="radio" name="assigneeId" value={user.id} required className="sr-only" />
                 <Avatar src={user.avatar || undefined} alt={user.name} />
                 <div className="flex flex-col">
                   <span className="text-sm font-medium text-[var(--foreground)]">{user.name}</span>
