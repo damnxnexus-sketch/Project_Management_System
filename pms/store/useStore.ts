@@ -45,6 +45,7 @@ const initialTasks: Task[] = [
     assigneeId: 'u2',
     dueDate: '2026-06-01',
     aiRisk: false,
+    progress: 0,
   },
   {
     id: 't2',
@@ -55,6 +56,7 @@ const initialTasks: Task[] = [
     assigneeId: 'u1',
     dueDate: '2026-05-25',
     aiRisk: true,
+    progress: 50,
   },
 ];
 
@@ -92,6 +94,7 @@ export const useStore = create<AppState>()(
             status: 'todo',
             priority: 'high',
             aiRisk: false,
+            progress: 0,
           },
           {
             id: `ai2-${Date.now()}`,
@@ -100,6 +103,7 @@ export const useStore = create<AppState>()(
             status: 'todo',
             priority: 'medium',
             aiRisk: false,
+            progress: 0,
           },
           {
             id: `ai3-${Date.now()}`,
@@ -108,6 +112,7 @@ export const useStore = create<AppState>()(
             status: 'todo',
             priority: 'low',
             aiRisk: true,
+            progress: 0,
           },
         ];
         set((state) => ({ tasks: [...newTasks, ...state.tasks] }));
