@@ -11,11 +11,13 @@ import { Role } from '@/types';
 import { useMounted } from '@/hooks/useMounted';
 import { ShieldAlert, Plus, Mail, User as UserIcon } from 'lucide-react';
 
+import { createUserAction } from '@/actions/adminActions';
+
 export default function AdminPage() {
   const isMounted = useMounted();
   const users = useStore((state) => state.users);
   const currentUser = useStore((state) => state.currentUser);
-  const addUser = useStore((state) => state.addUser);
+  const [isPending, startTransition] = React.useTransition();
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [newName, setNewName] = React.useState('');
@@ -30,18 +32,22 @@ export default function AdminPage() {
     e.preventDefault();
     if (!newName || !newEmail) return;
 
-    addUser({
-      id: `u-${Date.now()}`,
-      name: newName,
-      email: newEmail,
-      role: newRole,
-      avatar: `https://i.pravatar.cc/150?u=${Date.now()}`,
-    });
+    const formData = new FormData();
+    formData.append('name', newName);
+    formData.append('email', newEmail);
+    formData.append('role', newRole);
 
-    setIsModalOpen(false);
-    setNewName('');
-    setNewEmail('');
-    setNewRole('Worker');
+    startTransition(async () => {
+      const result = await createUserAction(formData);
+      if (!result?.error) {
+        setIsModalOpen(false);
+        setNewName('');
+        setNewEmail('');
+        setNewRole('Worker');
+      } else {
+        alert(result.error);
+      }
+    });
   };
 
   return (
