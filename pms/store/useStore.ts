@@ -13,6 +13,8 @@ interface AppState {
   addUser: (user: User) => void;
   setCurrentUser: (user: User | null) => void;
   generateAITasks: (prompt: string) => Promise<void>;
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
 }
 
 const initialUsers: User[] = [
@@ -61,6 +63,7 @@ export const useStore = create<AppState>()(
       tasks: initialTasks,
       users: initialUsers,
       currentUser: initialUsers[0],
+      isSidebarOpen: false,
 
       setTasks: (tasks) => set({ tasks }),
       addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
@@ -74,6 +77,7 @@ export const useStore = create<AppState>()(
         })),
       addUser: (user) => set((state) => ({ users: [...state.users, user] })),
       setCurrentUser: (user) => set({ currentUser: user }),
+      toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 
       generateAITasks: async (prompt) => {
         // Simulate API delay
