@@ -40,8 +40,8 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className={cn(
-            'group relative mb-3 rounded-lg border border-[var(--border-color)] bg-[var(--background)] p-4 shadow-sm transition-colors hover:border-[var(--muted)]',
-            snapshot.isDragging && 'border-[var(--accent)] shadow-xl z-50 rotate-2',
+            'group relative mb-3 rounded-xl border border-[var(--border-color)] bg-[var(--surface-raised)] p-4 shadow-sm transition-all hover:shadow-md hover:border-[var(--border-focus)]',
+            snapshot.isDragging && 'shadow-2xl z-50 rotate-2 border-[var(--accent)]',
             isPending && 'opacity-70'
           )}
         >

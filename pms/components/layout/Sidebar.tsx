@@ -37,15 +37,15 @@ export function Sidebar() {
       </AnimatePresence>
 
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 flex flex-col border-r border-[var(--border-color)] bg-[var(--background)]/95 backdrop-blur-xl transition-transform duration-300 ease-in-out md:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-64 flex flex-col border-r border-[var(--border-color)] bg-[var(--surface)] transition-transform duration-300 ease-in-out md:translate-x-0",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex h-16 shrink-0 items-center px-6">
-          <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)]">
+          <h1 className="text-xl font-bold tracking-tight text-[var(--foreground-heading)]">
             NEXUS<span className="text-[var(--accent)]">.</span>
           </h1>
         </div>
-        <nav className="flex flex-col gap-2 px-4 py-4 flex-1 overflow-y-auto">
+        <nav className="flex flex-col gap-1 py-4 flex-1 overflow-y-auto pr-4">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -54,29 +54,21 @@ export function Sidebar() {
                 href={item.href}
                 onClick={() => { if(window.innerWidth < 768) toggleSidebar(); }}
                 className={cn(
-                  'relative flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                  isActive ? 'text-white' : 'text-[var(--muted)] hover:text-white hover:bg-white/5'
+                  'relative flex items-center gap-4 px-6 py-3 text-sm font-medium transition-colors rounded-r-full',
+                  isActive ? 'text-white bg-[var(--accent)]' : 'text-[var(--foreground)] hover:bg-[var(--surface-raised)]'
                 )}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="sidebar-active"
-                    className="absolute inset-0 rounded-md bg-[var(--accent)]"
-                    initial={false}
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                  />
-                )}
-                <item.icon className="relative z-10" size={18} />
+                <item.icon className="relative z-10" size={20} />
                 <span className="relative z-10">{item.name}</span>
               </Link>
             );
           })}
         </nav>
         
-        <div className="p-4 border-t border-[var(--border-color)] mt-auto shrink-0">
+        <div className="p-4 mt-auto shrink-0 pr-4">
           <form action={logoutAction}>
-            <button type="submit" className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[var(--muted)] hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer">
-              <LogOut size={18} />
+            <button type="submit" className="flex w-full items-center gap-4 px-6 py-3 rounded-r-full text-sm font-medium text-[var(--muted)] hover:text-red-400 hover:bg-[var(--surface-raised)] transition-colors cursor-pointer">
+              <LogOut size={20} />
               <span>Sign Out</span>
             </button>
           </form>

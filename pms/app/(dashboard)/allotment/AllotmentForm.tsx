@@ -31,7 +31,7 @@ export function AllotmentForm({ users, projects }: { users: UserData[], projects
   };
 
   return (
-    <div className="rounded-xl border border-[var(--border-color)] bg-[var(--glass-bg)] p-6 w-full max-w-xl">
+    <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--surface)] p-6 w-full max-w-xl shadow-sm">
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         
         <div className="space-y-2">

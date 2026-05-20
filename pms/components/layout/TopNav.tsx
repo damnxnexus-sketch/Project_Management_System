@@ -12,12 +12,12 @@ export function TopNav() {
   const isMounted = useMounted();
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[var(--border-color)] bg-[var(--background)]/80 px-4 sm:px-6 backdrop-blur-md">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[var(--border-color)] bg-[var(--surface)] px-4 sm:px-6">
       <div className="flex items-center gap-3 w-full max-w-md">
-        <button onClick={toggleSidebar} className="md:hidden text-[var(--foreground)] p-1 -ml-2 rounded-md hover:bg-[var(--glass-bg)] cursor-pointer">
+        <button onClick={toggleSidebar} className="md:hidden text-[var(--foreground)] p-1 -ml-2 rounded-full hover:bg-[var(--surface-raised)] transition-colors cursor-pointer">
           <Menu size={24} />
         </button>
-        <div className="hidden sm:flex w-full items-center gap-2 rounded-md border border-[var(--border-color)] bg-[var(--glass-bg)] px-3 py-1.5 focus-within:ring-2 focus-within:ring-[var(--accent)] transition-all">
+        <div className="hidden sm:flex w-full items-center gap-2 rounded-full border border-[var(--border-color)] bg-[var(--surface-raised)] px-4 py-2 focus-within:ring-2 focus-within:ring-[var(--accent)] transition-all">
           <Search className="text-[var(--muted)]" size={18} />
           <input
             type="text"

@@ -44,7 +44,7 @@ export default async function ProjectsPage() {
               : 0;
 
             return (
-              <div key={project.id} className="rounded-xl border border-[var(--border-color)] bg-[var(--glass-bg)] p-6 hover:border-[var(--muted)] transition-colors">
+              <div key={project.id} className="rounded-2xl border border-[var(--border-color)] bg-[var(--surface)] p-6 hover:shadow-lg hover:border-[var(--border-focus)] transition-all">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex flex-col gap-1">
                     <h3 className="font-semibold text-[var(--foreground)]">{project.name}</h3>

@@ -63,16 +63,16 @@ export function AiPrompt() {
           animate={{
             boxShadow: isLoading
               ? [
-                  '0 0 0 1px rgba(114, 47, 55, 0.2)',
-                  '0 0 0 2px rgba(114, 47, 55, 0.8)',
-                  '0 0 0 1px rgba(114, 47, 55, 0.2)',
+                  '0 2px 10px rgba(114, 47, 55, 0.2)',
+                  '0 4px 20px rgba(114, 47, 55, 0.6)',
+                  '0 2px 10px rgba(114, 47, 55, 0.2)',
                 ]
-              : '0 0 0 1px var(--border-color)',
+              : '0 2px 6px rgba(0,0,0,0.4)',
           }}
           transition={{ duration: 1.5, repeat: isLoading ? Infinity : 0 }}
           className={cn(
-            'flex w-full items-center gap-2 rounded-xl bg-[var(--glass-bg)] px-4 py-3 backdrop-blur-md transition-colors',
-            !isLoading && 'focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:border-transparent'
+            'flex w-full items-center gap-3 rounded-full bg-[var(--surface)] border border-[var(--border-color)] px-5 py-3 transition-all',
+            !isLoading && 'focus-within:ring-2 focus-within:ring-[var(--accent)] hover:shadow-lg hover:border-[var(--border-focus)]'
           )}
         >
           <Sparkles className={cn('shrink-0', isLoading ? 'text-[var(--accent)] animate-pulse' : 'text-[var(--muted)]')} size={20} />
@@ -81,15 +81,15 @@ export function AiPrompt() {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             disabled={isLoading}
-            placeholder="Generate Project with AI (e.g. Setup database schema)..."
+            placeholder="Generate tasks with AI (e.g. Setup database schema)..."
             className="flex-1 bg-transparent text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={!prompt.trim() || isLoading}
-            className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--accent)] text-white transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 cursor-pointer"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-white transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 cursor-pointer shadow-sm"
           >
-            <ArrowRight size={16} />
+            <ArrowRight size={18} />
           </button>
         </motion.div>
       </form>

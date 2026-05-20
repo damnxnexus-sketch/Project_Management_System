@@ -1,17 +1,24 @@
 @import "tailwindcss";
 
 :root {
-  --background: #121212;
-  --foreground: #ffffff;
+  --background: #0f0f0f;
+  --surface: #1e1e1e;
+  --surface-raised: #282828;
+  --foreground: #e3e3e3;
+  --foreground-heading: #ffffff;
   --muted: #a0a0a0;
   --accent: #722f37;
   --accent-hover: #8a3842;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --glass-bg: rgba(255, 255, 255, 0.05);
+  --border-color: #383838;
+  --border-focus: #505050;
+  /* Retain glass-bg temporarily mapped to surface for safety during migration */
+  --glass-bg: var(--surface);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
