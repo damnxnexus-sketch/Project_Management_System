@@ -39,18 +39,36 @@ export function AllotmentForm({ users, projects }: { users: UserData[], projects
             <UserIcon size={16} className="text-[var(--muted)]" />
             Select Worker
           </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto p-1">
-            {users.map(user => (
-              <label key={user.id} className="flex items-center gap-3 rounded-lg border border-[var(--border-color)] p-3 hover:bg-[var(--background)]/50 cursor-pointer has-[:checked]:border-[var(--accent)] has-[:checked]:bg-[var(--accent)]/10 transition-colors">
-                <input type="radio" name="assigneeId" value={user.id} required className="sr-only" />
-                <Avatar src={user.avatar || undefined} alt={user.name} />
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-[var(--foreground)]">{user.name}</span>
-                  <span className="text-xs text-[var(--muted)]">{user.role}</span>
+          {users.length === 0 ? (
+            <div className="text-center p-4 rounded-lg border border-[var(--border-color)] bg-[var(--background)]/50 text-[var(--muted)]">
+              No workers available
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto p-1">
+              {users.map(user => (
+                <div key={user.id} className="flex items-center">
+                  <input 
+                    type="radio" 
+                    id={`user-${user.id}`}
+                    name="assigneeId" 
+                    value={user.id} 
+                    required 
+                    className="w-4 h-4 accent-[var(--accent)] cursor-pointer"
+                  />
+                  <label 
+                    htmlFor={`user-${user.id}`}
+                    className="flex items-center gap-3 flex-1 rounded-lg border border-[var(--border-color)] p-3 ml-2 hover:bg-[var(--background)]/50 cursor-pointer transition-colors"
+                  >
+                    <Avatar src={user.avatar || undefined} alt={user.name} />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-[var(--foreground)]">{user.name}</span>
+                      <span className="text-xs text-[var(--muted)]">{user.role}</span>
+                    </div>
+                  </label>
                 </div>
-              </label>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

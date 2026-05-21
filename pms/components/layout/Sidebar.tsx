@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FolderKanban, Users, Sparkles, LogOut, CalendarCheck, Video } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Users, Sparkles, LogOut, CalendarCheck, Video, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/store/useStore';
@@ -12,6 +12,7 @@ import { logoutAction } from '@/actions/authActions';
 const navItems = [
   { name: 'Overview', href: '/', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderKanban },
+  { name: 'Search', href: '/search', icon: Search },
   { name: 'Team', href: '/admin', icon: Users },
   { name: 'Allotment', href: '/allotment', icon: CalendarCheck },
   { name: 'Meetings', href: '/meetings', icon: Video },

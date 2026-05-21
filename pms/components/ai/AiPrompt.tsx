@@ -3,54 +3,27 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
-import { useStore } from '@/store/useStore';
 import { cn } from '@/lib/utils';
-
 import { createAiTasks } from '@/actions/taskActions';
 
 export function AiPrompt() {
   const [prompt, setPrompt] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const generateAITasks = useStore((state) => state.generateAITasks);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim() || isLoading) return;
 
     setIsLoading(true);
-    // Let the store generate and return the tasks locally.
-    // Wait, generateAITasks currently returns Promise<void> and updates store.
-    // We can just rely on the store to give us the tasks? No, we need the exact new tasks.
-    // Let's generate them here directly!
-    const newTasks = [
-      {
-        title: `Analyze: ${prompt.slice(0, 20)}...`,
-        description: 'AI generated task based on your prompt.',
-        status: 'todo',
-        priority: 'high',
-        aiRisk: false,
-        progress: 0,
-      },
-      {
-        title: 'Draft Action Plan',
-        description: 'AI generated task',
-        status: 'todo',
-        priority: 'medium',
-        aiRisk: false,
-        progress: 0,
-      },
-      {
-        title: 'Review Deliverables',
-        description: 'AI generated task',
-        status: 'todo',
-        priority: 'low',
-        aiRisk: true,
-        progress: 0,
-      },
-    ];
-
-    await createAiTasks(newTasks);
-    // The server action revalidates the path, so the page will reload with new tasks from DB.
+    
+    // Call the server action with the prompt string
+    const result = await createAiTasks(prompt);
+    
+    if (result.success) {
+      // Tasks created successfully, page will reload via revalidatePath
+    } else {
+      console.error(result.error);
+    }
     
     setIsLoading(false);
     setPrompt('');
