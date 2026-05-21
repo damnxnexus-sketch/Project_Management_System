@@ -141,3 +141,39 @@ export async function addProjectTask(formData: FormData) {
   }
 }
 
+export async function dedicateProjectToAdmin(formData: FormData) {
+  const adminId = formData.get('adminId') as string;
+  const projectId = formData.get('projectId') as string;
+
+  if (!adminId || !projectId) return { error: 'Missing required fields' };
+
+  try {
+    // Check if admin already assigned
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+      select: { assignees: { select: { id: true } } }
+    });
+
+    const alreadyAssigned = project?.assignees.some(a => a.id === adminId);
+    if (alreadyAssigned) {
+      return { error: 'This admin is already assigned to this project' };
+    }
+
+    // Assign the admin to the project
+    await prisma.project.update({
+      where: { id: projectId },
+      data: {
+        assignees: {
+          connect: { id: adminId }
+        }
+      }
+    });
+
+    revalidatePath('/allotment');
+    revalidatePath('/projects');
+    return { success: true };
+  } catch (e) {
+    console.error('Failed to dedicate project:', e);
+    return { error: 'Failed to dedicate project.' };
+  }
+}

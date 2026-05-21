@@ -34,10 +34,10 @@ export default async function AllotmentPage() {
   return (
     <div className="flex h-full flex-col max-w-5xl mx-auto w-full">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] mb-2">Daily Task Allotment</h2>
-        <p className="text-[var(--muted)]">Assign specific tasks to team members for the day.</p>
+        <h2 className="text-2xl font-bold tracking-tight text-[var(--foreground)] mb-2">{session.role === 'Master Admin' ? 'Task & Project Management' : 'Daily Task Allotment'}</h2>
+        <p className="text-[var(--muted)]">{session.role === 'Master Admin' ? 'Assign tasks to admins/workers and dedicate projects to admins.' : 'Assign specific tasks to team members for the day.'}</p>
       </div>
-      <AllotmentForm users={users} projects={projects} />
+      <AllotmentForm users={users} projects={projects} userRole={session.role as string} />
     </div>
   );
 }
