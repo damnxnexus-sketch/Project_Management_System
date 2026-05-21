@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { KanbanBoard } from '@/components/kanban/KanbanBoard';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, BarChart3, Clock, CheckCircle2, AlertCircle, Users, FolderOpen } from 'lucide-react';
 import Link from 'next/link';
 
 interface Task {
@@ -27,7 +27,7 @@ interface Project {
 }
 
 interface StatCard {
-  icon: React.ElementType;
+  iconType: 'chart' | 'clock' | 'check' | 'alert' | 'folder' | 'users';
   label: string;
   value: number;
   color: string;
@@ -47,6 +47,18 @@ interface DashboardContentProps {
   stats: StatCard[];
   users: User[];
 }
+
+const getIcon = (type: string) => {
+  const iconMap: Record<string, React.ElementType> = {
+    'chart': BarChart3,
+    'clock': Clock,
+    'check': CheckCircle2,
+    'alert': AlertCircle,
+    'folder': FolderOpen,
+    'users': Users,
+  };
+  return iconMap[type] || BarChart3;
+};
 
 export function DashboardContent({ session, tasks, projects, stats, users }: DashboardContentProps) {
   const [activeView, setActiveView] = React.useState<'overview' | 'kanban'>('overview');
@@ -88,7 +100,7 @@ export function DashboardContent({ session, tasks, projects, stats, users }: Das
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {stats.map((stat, idx) => {
-              const Icon = stat.icon;
+              const Icon = getIcon(stat.iconType);
               return (
                 <motion.div
                   key={idx}
