@@ -4,32 +4,55 @@ import { Task } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { useStore } from '@/store/useStore';
-import { Calendar, Sparkles, Trash2 } from 'lucide-react';
+import { Calendar, Sparkles, Trash2, Flag } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { updateTaskProgress, deleteTask } from '@/actions/taskActions';
+import { deleteTask } from '@/actions/taskActions';
+import { FlagSelector } from './FlagSelector';
 
 export function TaskCard({ task, index }: { task: Task; index: number }) {
   const users = useStore((state) => state.users);
   const assignee = users.find((u) => u.id === task.assigneeId);
-  const [progress, setProgress] = React.useState(task.progress || 0);
   const [isPending, startTransition] = React.useTransition();
-
-  const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProgress(parseInt(e.target.value));
-  };
-
-  const handleProgressCommit = () => {
-    if (progress !== task.progress) {
-      startTransition(async () => {
-        await updateTaskProgress(task.id, progress);
-      });
+  const [flags, setFlags] = React.useState<string[]>(() => {
+    if (typeof task.flags === 'string') {
+      try {
+        return JSON.parse(task.flags);
+      } catch {
+        return [];
+      }
     }
-  };
+    return Array.isArray(task.flags) ? task.flags : [];
+  });
 
   const handleDelete = () => {
     startTransition(async () => {
       await deleteTask(task.id);
     });
+  };
+
+  const handleFlagsChange = () => {
+    // Refetch or update flags from parent
+    window.location.reload();
+  };
+
+  const getFlagColor = (flag: string) => {
+    const flagColors: Record<string, string> = {
+      'urgent': 'bg-red-500',
+      'blocked': 'bg-red-600',
+      'waiting': 'bg-amber-500',
+      'review': 'bg-blue-500',
+      'testing': 'bg-purple-500',
+      'documentation': 'bg-indigo-500',
+      'bug': 'bg-pink-500',
+      'feature': 'bg-emerald-500',
+      'refactor': 'bg-cyan-500',
+      'performance': 'bg-green-500',
+    };
+    return flagColors[flag] || 'bg-gray-500';
+  };
+
+  const getFlagLabel = (flag: string) => {
+    return flag.charAt(0).toUpperCase() + flag.slice(1).replace(/-/g, ' ');
   };
 
   return (

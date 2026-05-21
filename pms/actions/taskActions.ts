@@ -201,3 +201,97 @@ async function logActivity(
     console.error('Failed to log activity:', e);
   }
 }
+
+export async function updateTaskFlags(taskId: string, flags: string[]) {
+  try {
+    const session = await getSession();
+    if (!session) return { error: 'Unauthorized' };
+
+    const oldTask = await prisma.task.findUnique({ where: { id: taskId } });
+    const oldFlags = oldTask?.flags ? JSON.parse(oldTask.flags) : [];
+
+    await prisma.task.update({
+      where: { id: taskId },
+      data: { flags: JSON.stringify(flags) },
+    });
+
+    await logActivity(
+      session.userId as string,
+      'updated',
+      'task',
+      taskId,
+      { field: 'flags', oldValue: oldFlags, newValue: flags }
+    );
+
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to update flags:', error);
+    return { error: 'Failed to update flags' };
+  }
+}
+
+export async function addTaskFlag(taskId: string, flag: string) {
+  try {
+    const session = await getSession();
+    if (!session) return { error: 'Unauthorized' };
+
+    const task = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!task) return { error: 'Task not found' };
+
+    const flags = task.flags ? JSON.parse(task.flags) : [];
+    if (flags.includes(flag)) return { error: 'Flag already exists' };
+
+    const newFlags = [...flags, flag];
+    await prisma.task.update({
+      where: { id: taskId },
+      data: { flags: JSON.stringify(newFlags) },
+    });
+
+    await logActivity(
+      session.userId as string,
+      'updated',
+      'task',
+      taskId,
+      { action: 'Added flag', flag }
+    );
+
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to add flag:', error);
+    return { error: 'Failed to add flag' };
+  }
+}
+
+export async function removeTaskFlag(taskId: string, flag: string) {
+  try {
+    const session = await getSession();
+    if (!session) return { error: 'Unauthorized' };
+
+    const task = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!task) return { error: 'Task not found' };
+
+    const flags = task.flags ? JSON.parse(task.flags) : [];
+    const newFlags = flags.filter((f: string) => f !== flag);
+
+    await prisma.task.update({
+      where: { id: taskId },
+      data: { flags: JSON.stringify(newFlags) },
+    });
+
+    await logActivity(
+      session.userId as string,
+      'updated',
+      'task',
+      taskId,
+      { action: 'Removed flag', flag }
+    );
+
+    revalidatePath('/');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to remove flag:', error);
+    return { error: 'Failed to remove flag' };
+  }
+}
