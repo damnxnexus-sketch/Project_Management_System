@@ -55,7 +55,13 @@ export default async function Home() {
     projectName: t.project?.name,
   }));
 
-  const statCards = [
+  const statCards: Array<{
+    iconType: 'chart' | 'clock' | 'check' | 'alert' | 'folder' | 'users';
+    label: string;
+    value: number;
+    color: string;
+    bgColor: string;
+  }> = [
     {
       iconType: 'chart',
       label: 'Total Tasks',
