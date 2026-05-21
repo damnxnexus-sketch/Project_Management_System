@@ -2,7 +2,6 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { DashboardContent } from '@/components/layout/DashboardContent';
-import { BarChart3, Clock, CheckCircle2, AlertCircle, Users, FolderOpen } from 'lucide-react';
 
 export default async function Home() {
   const session = await getSession();
@@ -58,42 +57,42 @@ export default async function Home() {
 
   const statCards = [
     {
-      icon: BarChart3,
+      iconType: 'chart',
       label: 'Total Tasks',
       value: stats.totalTasks,
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
     },
     {
-      icon: Clock,
+      iconType: 'clock',
       label: 'In Progress',
       value: stats.inProgressTasks,
       color: 'text-amber-500',
       bgColor: 'bg-amber-500/10',
     },
     {
-      icon: CheckCircle2,
+      iconType: 'check',
       label: 'Completed',
       value: stats.completedTasks,
       color: 'text-emerald-500',
       bgColor: 'bg-emerald-500/10',
     },
     {
-      icon: AlertCircle,
+      iconType: 'alert',
       label: 'High Risk',
       value: stats.highRiskTasks,
       color: 'text-red-500',
       bgColor: 'bg-red-500/10',
     },
     {
-      icon: FolderOpen,
+      iconType: 'folder',
       label: 'Projects',
       value: stats.totalProjects,
       color: 'text-purple-500',
       bgColor: 'bg-purple-500/10',
     },
     {
-      icon: Users,
+      iconType: 'users',
       label: 'Team Members',
       value: users.length,
       color: 'text-indigo-500',
