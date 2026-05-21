@@ -8,6 +8,13 @@ export default async function Home() {
   const session = await getSession();
   if (!session) redirect('/login');
 
+  // Get current user details
+  const currentUser = await prisma.user.findUnique({
+    where: { id: session.userId as string },
+  });
+
+  if (!currentUser) redirect('/login');
+
   // Fetch tasks based on role
   const taskWhereClause = session.role === 'Worker' ? { assigneeId: session.userId as string } : {};
   const tasks = await prisma.task.findMany({
@@ -96,7 +103,7 @@ export default async function Home() {
 
   return (
     <DashboardContent 
-      session={session}
+      session={{ name: currentUser.name, userId: currentUser.id, role: currentUser.role }}
       tasks={formattedTasks}
       projects={projects}
       stats={statCards}
