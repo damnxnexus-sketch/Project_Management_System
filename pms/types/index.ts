@@ -22,6 +22,7 @@ export interface Task {
   aiRisk?: boolean; // If true, indicates 'High Risk of Delay'
   progress: number;
   projectId?: string;
+  flags?: string | string[]; // JSON string or array of flag strings
 }
 
 export interface Project {

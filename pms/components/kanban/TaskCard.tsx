@@ -4,7 +4,7 @@ import { Task } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { useStore } from '@/store/useStore';
-import { Calendar, Sparkles, Trash2, Flag } from 'lucide-react';
+import { Calendar, Sparkles, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { deleteTask } from '@/actions/taskActions';
 import { FlagSelector } from './FlagSelector';
@@ -13,7 +13,7 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
   const users = useStore((state) => state.users);
   const assignee = users.find((u) => u.id === task.assigneeId);
   const [isPending, startTransition] = React.useTransition();
-  const [flags, setFlags] = React.useState<string[]>(() => {
+  const flags = React.useMemo(() => {
     if (typeof task.flags === 'string') {
       try {
         return JSON.parse(task.flags);
@@ -22,7 +22,7 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
       }
     }
     return Array.isArray(task.flags) ? task.flags : [];
-  });
+  }, [task.flags]);
 
   const handleDelete = () => {
     startTransition(async () => {
@@ -31,8 +31,7 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
   };
 
   const handleFlagsChange = () => {
-    // Refetch or update flags from parent
-    window.location.reload();
+    // Flags updated via server action
   };
 
   const getFlagColor = (flag: string) => {
@@ -85,41 +84,49 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
           </div>
           
           <div className="mb-4">
-            <p className="text-xs text-[var(--muted)] line-clamp-2">{task.description}</p>
+            <p className="text-xs text-muted line-clamp-2">{task.description}</p>
           </div>
 
-          <div className="mb-4 group-hover:opacity-100 opacity-60 transition-opacity">
-            <div className="flex justify-between text-xs text-[var(--muted)] mb-1">
-              <span>Progress</span>
-              <span>{progress}%</span>
-            </div>
-            <input 
-              type="range" 
-              min="0" 
-              max="100" 
-              value={progress}
-              onChange={handleProgressChange}
-              onMouseUp={handleProgressCommit}
-              onTouchEnd={handleProgressCommit}
-              className="w-full h-1 bg-[var(--border-color)] rounded-lg appearance-none cursor-pointer accent-[var(--accent)]"
-            />
+          {/* Flags Section */}
+          <div className="mb-4">
+            {flags.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {flags.map((flag: string) => (
+                  <span
+                    key={flag}
+                    className={`${getFlagColor(flag)} text-white text-xs px-2 py-0.5 rounded-full whitespace-nowrap`}
+                  >
+                    {getFlagLabel(flag)}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted italic">No flags</p>
+            )}
           </div>
 
-          <div className="flex items-center justify-between mt-auto">
-            <div className="flex gap-2 items-center">
+          <div className="flex items-center justify-between mt-auto gap-2">
+            <div className="flex gap-2 items-center flex-1 min-w-0">
               <Badge variant={task.priority === 'high' ? 'danger' : task.priority === 'medium' ? 'warning' : 'default'}>
                 {task.priority}
               </Badge>
               {task.dueDate && (
-                <div className="flex items-center gap-1 text-[10px] text-[var(--muted)]">
+                <div className="flex items-center gap-1 text-[10px] text-muted whitespace-nowrap">
                   <Calendar size={12} />
                   {new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                 </div>
               )}
             </div>
-            {assignee && (
-              <Avatar src={assignee.avatar} alt={assignee.name} className="h-6 w-6" title={assignee.name} />
-            )}
+            <div className="flex items-center gap-2">
+              <FlagSelector 
+                taskId={task.id} 
+                currentFlags={flags}
+                onFlagsChange={handleFlagsChange}
+              />
+              {assignee && (
+                <Avatar src={assignee.avatar} alt={assignee.name} className="h-6 w-6" title={assignee.name} />
+              )}
+            </div>
           </div>
         </div>
       )}
