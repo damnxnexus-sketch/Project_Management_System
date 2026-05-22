@@ -688,3 +688,292 @@ Email Service Options:
 - Repetitive setup for similar projects
 
 **What's Needed:**
+```prisma
+// Update: prisma/schema.prisma
+
+model ProjectTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  tasks       TaskTemplate[] @relation("TemplateTasksRelation")
+  createdBy   String
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model TaskTemplate {
+  id          String   @id @default(cuid())
+  templateId  String
+  template    ProjectTemplate @relation("TemplateTasksRelation", fields: [templateId], references: [id])
+  title       String
+  description String
+  priority    String
+  estimatedHours Float?
+  order       Int
+}
+```
+
+**UI Features:**
+- "Save as Template" button on project page
+- Template library page
+- "Create from Template" option in project creation
+- Public vs private templates
+- Template preview before creation
+
+**Files to Create:**
+- `app/(dashboard)/templates/page.tsx` - Template library
+- `components/templates/TemplateCard.tsx` - Template preview
+- `components/templates/CreateFromTemplate.tsx` - Template selector
+- `actions/templateActions.ts` - Template CRUD
+
+---
+
+### 20. 📊 Gantt Chart / Timeline View
+**Status:** Not started  
+**Impact:** MEDIUM - No visual project timeline
+
+**Problem:**
+- Only Kanban board view available
+- Cannot see project timeline
+- No visual task scheduling
+- Cannot identify scheduling conflicts
+
+**What's Needed:**
+```tsx
+// Create: app/(dashboard)/timeline/page.tsx
+
+- Horizontal timeline view of all tasks
+- Tasks displayed as bars with start/end dates
+- Drag to reschedule tasks
+- Zoom in/out (day, week, month view)
+- Color-coded by project or priority
+- Show dependencies as connecting lines
+- Milestone markers
+```
+
+**Recommended Library:** `react-gantt-chart` or `dhtmlx-gantt`
+
+**Files to Create:**
+- `app/(dashboard)/timeline/page.tsx` - Gantt chart page
+- `components/timeline/GanttChart.tsx` - Gantt component
+- `components/timeline/TimelineControls.tsx` - Zoom, filter controls
+
+---
+
+### 21. 🔍 Advanced Search Features
+**Status:** Basic search exists, needs enhancement  
+**Impact:** MEDIUM - Limited search capabilities
+
+**Current State:**
+- Basic full-text search on task titles/descriptions
+- Filter by status, priority, assignee, project, date range
+- No autocomplete, no saved searches, no search by flags
+
+**What's Needed:**
+```tsx
+// Enhance: lib/search.ts and app/(dashboard)/search/page.tsx
+
+New Features:
+- Search by flag (urgent, blocked, etc.)
+- Search by high-risk status
+- Search in comments
+- Search in attachments (file names)
+- Autocomplete suggestions as you type
+- Recent searches history
+- Saved search queries
+- Search operators (AND, OR, NOT)
+- Fuzzy search (typo tolerance)
+```
+
+**Advanced Search Syntax:**
+```
+status:in-progress priority:high assignee:@john
+flag:urgent OR flag:blocked
+project:"Website Redesign" -status:done
+```
+
+**Files to Update:**
+- `lib/search.ts` - Add advanced search logic
+- `app/(dashboard)/search/page.tsx` - Add new filters
+- `components/search/SearchSyntaxHelper.tsx` - Help tooltip
+- `components/search/SavedSearches.tsx` - Saved queries
+
+---
+
+### 22. 👥 Team Chat / Messaging
+**Status:** Not started  
+**Impact:** LOW - External chat tools can be used
+
+**Problem:**
+- No direct messaging between team members
+- No team channels
+- Must use external tools (Slack, Teams, etc.)
+
+**What's Needed:**
+```prisma
+// Create: prisma/schema.prisma
+
+model Channel {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // "direct", "group", "project"
+  projectId   String?
+  members     ChannelMember[] @relation("ChannelMembers")
+  messages    Message[] @relation("ChannelMessages")
+  createdAt   DateTime @default(now())
+}
+
+model ChannelMember {
+  id          String   @id @default(cuid())
+  channelId   String
+  channel     Channel  @relation("ChannelMembers", fields: [channelId], references: [id])
+  userId      String
+  user        User     @relation("UserChannels", fields: [userId], references: [id])
+  joinedAt    DateTime @default(now())
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  channelId   String
+  channel     Channel  @relation("ChannelMessages", fields: [channelId], references: [id])
+  authorId    String
+  author      User     @relation("UserMessages", fields: [authorId], references: [id])
+  content     String
+  attachments String?  // JSON array of file URLs
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+```
+
+**UI Features:**
+- Sidebar with channel list
+- Direct message list
+- Message input with file upload
+- Real-time message updates (WebSocket)
+- Typing indicators
+- Read receipts
+- Message reactions
+
+**Files to Create:**
+- `app/(dashboard)/messages/page.tsx` - Chat interface
+- `components/chat/ChannelList.tsx` - Channel sidebar
+- `components/chat/MessageList.tsx` - Message display
+- `components/chat/MessageInput.tsx` - Send messages
+- `actions/chatActions.ts` - Chat CRUD operations
+
+---
+
+## 🔒 SECURITY & PRODUCTION FEATURES
+
+### 23. 🛡️ Enhanced Security
+**Status:** Basic security in place, needs hardening
+
+**Current State:**
+- ✅ JWT authentication with HTTP-only cookies
+- ✅ Password hashing with bcrypt
+- ✅ Role-based access control
+- ❌ No rate limiting
+- ❌ No CSRF token validation
+- ❌ No input sanitization
+- ❌ No SQL injection protection beyond Prisma
+
+**What's Needed:**
+```typescript
+// Create: middleware.ts
+
+Security Enhancements:
+- Rate limiting (max 100 requests per minute per IP)
+- CSRF token validation on all mutations
+- Input sanitization (XSS prevention)
+- Content Security Policy headers
+- Helmet.js for security headers
+- Request logging and monitoring
+- IP blocking for suspicious activity
+```
+
+**Recommended Libraries:**
+- `next-rate-limit` - Rate limiting
+- `dompurify` - XSS sanitization
+- `helmet` - Security headers
+
+**Files to Create:**
+- `middleware.ts` - Rate limiting and security checks
+- `lib/security.ts` - Security utilities
+- `lib/sanitize.ts` - Input sanitization
+
+---
+
+### 24. 📊 Error Monitoring & Logging
+**Status:** Not started  
+**Impact:** HIGH - Cannot debug production issues
+
+**Problem:**
+- No error tracking
+- No performance monitoring
+- No user session replay
+- Errors logged to console only
+
+**What's Needed:**
+```typescript
+// Create: lib/monitoring.ts
+
+Error Monitoring:
+- Sentry integration for error tracking
+- Performance monitoring (Core Web Vitals)
+- User session replay
+- Error alerting (email/Slack)
+- Custom error boundaries
+```
+
+**Recommended Services:**
+- Sentry (error tracking)
+- LogRocket (session replay)
+- Datadog (APM)
+
+**Files to Create:**
+- `lib/monitoring.ts` - Sentry setup
+- `components/ErrorBoundary.tsx` - React error boundary
+- Update `app/layout.tsx` - Add error boundary
+
+---
+
+### 25. 🗄️ Production Database
+**Status:** Using SQLite (not production-ready)  
+**Impact:** HIGH - SQLite not suitable for production
+
+**Problem:**
+- SQLite is file-based (not scalable)
+- No concurrent write support
+- No replication or backups
+- Single point of failure
+
+**What's Needed:**
+```prisma
+// Update: prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"  // Change from sqlite
+  url      = env("DATABASE_URL")
+}
+```
+
+**Migration Steps:**
+1. Set up PostgreSQL database (AWS RDS, Supabase, Neon, etc.)
+2. Update `DATABASE_URL` in `.env`
+3. Run `npx prisma migrate deploy`
+4. Set up automated backups
+5. Configure connection pooling (PgBouncer)
+
+**Recommended Services:**
+- Supabase (PostgreSQL + auth + storage)
+- Neon (serverless PostgreSQL)
+- AWS RDS (managed PostgreSQL)
+- Railway (PostgreSQL hosting)
+
+---
+
+### 26. 🚀 Deployment & CI/CD
+**Status:** Not configured  
+**Impact:** MEDIUM - Manual deployment process
+
+**What's Needed:**
