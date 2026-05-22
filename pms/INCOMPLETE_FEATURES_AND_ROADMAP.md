@@ -481,3 +481,210 @@ Filters:
 - Cannot auto-update dependent tasks
 
 **What's Needed:**
+```prisma
+// Update: prisma/schema.prisma
+
+model TaskDependency {
+  id            String   @id @default(cuid())
+  taskId        String   // The dependent task
+  dependsOnId   String   // The task it depends on
+  type          String   // "blocks", "blocked_by", "related"
+  createdAt     DateTime @default(now())
+  
+  task          Task     @relation("DependentTask", fields: [taskId], references: [id])
+  dependsOn     Task     @relation("DependsOnTask", fields: [dependsOnId], references: [id])
+}
+
+// Add to Task model:
+dependencies     TaskDependency[] @relation("DependentTask")
+dependedOnBy     TaskDependency[] @relation("DependsOnTask")
+```
+
+**UI Features:**
+- Add dependency button in task detail
+- Search/select tasks to link
+- Dependency type selector (blocks, blocked by, related)
+- Visual dependency graph
+- Warning when completing task with incomplete dependencies
+
+**Files to Create:**
+- `components/dependencies/DependencySelector.tsx` - Add dependencies
+- `components/dependencies/DependencyGraph.tsx` - Visualize dependencies
+- `actions/dependencyActions.ts` - CRUD for dependencies
+
+---
+
+### 15. 📋 Subtasks
+**Status:** Not started  
+**Impact:** MEDIUM - Cannot break down complex tasks
+
+**Problem:**
+- No way to create subtasks
+- Cannot track progress of task components
+- Large tasks are monolithic
+
+**What's Needed:**
+```prisma
+// Update: prisma/schema.prisma
+
+model Task {
+  // ... existing fields
+  parentTaskId  String?
+  parentTask    Task?   @relation("TaskSubtasks", fields: [parentTaskId], references: [id])
+  subtasks      Task[]  @relation("TaskSubtasks")
+}
+```
+
+**UI Features:**
+- "Add Subtask" button in task detail
+- Checklist-style subtask display
+- Auto-calculate parent task progress from subtasks
+- Indent subtasks in task lists
+- Collapse/expand subtask groups
+
+**Files to Create:**
+- `components/subtasks/SubtaskList.tsx` - Display subtasks
+- `components/subtasks/SubtaskInput.tsx` - Create subtask
+- Update `actions/taskActions.ts` - Add subtask CRUD
+
+---
+
+### 16. ⏱️ Time Tracking
+**Status:** Not started  
+**Impact:** MEDIUM - Cannot track actual time spent
+
+**Problem:**
+- No time tracking functionality
+- Cannot compare estimated vs actual time
+- No timesheet reports
+
+**What's Needed:**
+```prisma
+// Update: prisma/schema.prisma
+
+model Task {
+  // ... existing fields
+  estimatedHours  Float?
+  actualHours     Float?   @default(0)
+  timeEntries     TimeEntry[] @relation("TaskTimeEntries")
+}
+
+model TimeEntry {
+  id          String   @id @default(cuid())
+  taskId      String
+  task        Task     @relation("TaskTimeEntries", fields: [taskId], references: [id])
+  userId      String
+  user        User     @relation("UserTimeEntries", fields: [userId], references: [id])
+  hours       Float
+  description String?
+  date        DateTime
+  createdAt   DateTime @default(now())
+}
+```
+
+**UI Features:**
+- Start/stop timer button on tasks
+- Manual time entry form
+- Time log display (date, hours, description)
+- Total time vs estimated time comparison
+- Timesheet view (calendar-based)
+
+**Files to Create:**
+- `components/time/TimeTracker.tsx` - Start/stop timer
+- `components/time/TimeEntryForm.tsx` - Manual entry
+- `components/time/TimeLogList.tsx` - Display time entries
+- `app/(dashboard)/timesheet/page.tsx` - Timesheet view
+- `actions/timeActions.ts` - Time tracking actions
+
+---
+
+### 17. 🔁 Recurring Tasks
+**Status:** Not started  
+**Impact:** LOW - Manual task creation for recurring work
+
+**Problem:**
+- No automated task creation
+- Must manually create daily/weekly tasks
+- No recurrence patterns
+
+**What's Needed:**
+```prisma
+// Update: prisma/schema.prisma
+
+model Task {
+  // ... existing fields
+  isRecurring     Boolean  @default(false)
+  recurrenceRule  String?  // RRULE format (e.g., "FREQ=DAILY;INTERVAL=1")
+  recurrenceEnd   DateTime?
+}
+```
+
+**UI Features:**
+- "Make Recurring" checkbox in task creation
+- Recurrence pattern selector (daily, weekly, monthly, custom)
+- End date or occurrence count
+- View all instances of recurring task
+- Edit single instance or all future instances
+
+**Backend Logic:**
+- Cron job to create task instances based on recurrence rules
+- Use `node-cron` or similar library
+
+**Files to Create:**
+- `components/recurrence/RecurrenceSelector.tsx` - Pattern selector
+- `lib/recurrence.ts` - RRULE parsing and task generation
+- `lib/cron.ts` - Scheduled task creation job
+
+---
+
+### 18. 📧 Email Notifications
+**Status:** Not started  
+**Impact:** MEDIUM - Users miss notifications when not logged in
+
+**Problem:**
+- Notifications only visible in-app
+- No email alerts for important events
+- Users must check app constantly
+
+**What's Needed:**
+```typescript
+// Create: lib/email.ts
+
+Email Triggers:
+- Task assigned to you
+- Task due date approaching (24 hours before)
+- Task overdue
+- Mentioned in comment
+- Project deadline approaching
+- High-risk task flagged by AI
+
+Email Service Options:
+- SendGrid
+- Resend
+- AWS SES
+- Postmark
+```
+
+**User Preferences:**
+- Email notification settings page
+- Toggle email notifications on/off per event type
+- Digest mode (daily summary vs instant)
+
+**Files to Create:**
+- `lib/email.ts` - Email sending utility
+- `lib/emailTemplates.ts` - HTML email templates
+- `app/(dashboard)/settings/notifications/page.tsx` - Email preferences
+- Update notification actions to send emails
+
+---
+
+### 19. 📁 Project Templates
+**Status:** Not started  
+**Impact:** LOW - Faster project setup
+
+**Problem:**
+- Must manually create projects and tasks each time
+- No reusable project structures
+- Repetitive setup for similar projects
+
+**What's Needed:**
