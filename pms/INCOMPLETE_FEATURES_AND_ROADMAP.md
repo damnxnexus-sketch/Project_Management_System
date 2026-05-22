@@ -977,3 +977,590 @@ datasource db {
 **Impact:** MEDIUM - Manual deployment process
 
 **What's Needed:**
+```yaml
+# Create: .github/workflows/deploy.yml
+
+CI/CD Pipeline:
+- Automated testing on pull requests
+- Linting and type checking
+- Build verification
+- Automated deployment to staging
+- Manual approval for production
+- Database migration automation
+- Environment variable management
+```
+
+**Deployment Platforms:**
+- Vercel (easiest for Next.js)
+- AWS (EC2, ECS, or Amplify)
+- Railway
+- Render
+- DigitalOcean App Platform
+
+**Files to Create:**
+- `.github/workflows/deploy.yml` - CI/CD pipeline
+- `.github/workflows/test.yml` - Automated testing
+- `Dockerfile` - Container image (if using Docker)
+- `docker-compose.yml` - Local development setup
+
+---
+
+## 🎨 UI/UX IMPROVEMENTS
+
+### 27. 🌙 Dark Mode / Theme Switcher
+**Status:** CSS variables exist, no switcher  
+**Impact:** LOW - User preference feature
+
+**Problem:**
+- CSS variables defined but no theme toggle
+- No user preference persistence
+- No system theme detection
+
+**What's Needed:**
+```tsx
+// Create: components/ThemeSwitcher.tsx
+
+- Theme toggle button (light/dark/system)
+- Persist preference in localStorage
+- Detect system theme preference
+- Smooth transition between themes
+- Theme selector in user settings
+```
+
+**Files to Create:**
+- `components/ThemeSwitcher.tsx` - Theme toggle
+- `hooks/useTheme.ts` - Theme management hook
+- Update `app/layout.tsx` - Add theme provider
+
+---
+
+### 28. 📱 Mobile Responsiveness
+**Status:** Partially responsive, needs improvement  
+**Impact:** MEDIUM - Poor mobile experience
+
+**Problem:**
+- Kanban board difficult to use on mobile
+- Sidebar doesn't collapse properly
+- Forms too wide on small screens
+- Touch targets too small
+
+**What's Needed:**
+- Mobile-optimized Kanban board (vertical scrolling)
+- Hamburger menu for sidebar
+- Bottom navigation for mobile
+- Larger touch targets (min 44x44px)
+- Swipe gestures for task actions
+- Mobile-friendly modals (full-screen on mobile)
+
+**Files to Update:**
+- `components/kanban/KanbanBoard.tsx` - Mobile layout
+- `components/layout/Sidebar.tsx` - Collapsible sidebar
+- All modal components - Full-screen on mobile
+- All forms - Stack inputs vertically on mobile
+
+---
+
+### 29. ♿ Accessibility (A11y)
+**Status:** Basic HTML semantics, needs WCAG compliance  
+**Impact:** MEDIUM - Excludes users with disabilities
+
+**What's Needed:**
+```tsx
+Accessibility Improvements:
+- ARIA labels on all interactive elements
+- Keyboard navigation (Tab, Enter, Esc)
+- Focus indicators (visible focus rings)
+- Screen reader announcements for dynamic content
+- Color contrast compliance (WCAG AA)
+- Alt text for all images
+- Skip to main content link
+- Form error announcements
+```
+
+**Testing Tools:**
+- axe DevTools (browser extension)
+- Lighthouse accessibility audit
+- NVDA or JAWS screen reader testing
+
+**Files to Update:**
+- All components - Add ARIA labels
+- `components/ui/Button.tsx` - Focus styles
+- `components/ui/Modal.tsx` - Focus trap
+- `components/kanban/KanbanBoard.tsx` - Keyboard navigation
+
+---
+
+### 30. 🎯 Onboarding & Help
+**Status:** Not started  
+**Impact:** MEDIUM - New users struggle to get started
+
+**Problem:**
+- No onboarding flow for new users
+- No tooltips or help text
+- No documentation in-app
+- No tutorial or demo mode
+
+**What's Needed:**
+```tsx
+// Create: components/onboarding/OnboardingTour.tsx
+
+Onboarding Features:
+- Welcome modal on first login
+- Interactive product tour (highlight features)
+- Tooltips on key UI elements
+- Help button with documentation links
+- Video tutorials
+- Sample project with demo tasks
+- Keyboard shortcuts cheat sheet
+```
+
+**Recommended Library:** `react-joyride` or `intro.js`
+
+**Files to Create:**
+- `components/onboarding/OnboardingTour.tsx` - Product tour
+- `components/help/HelpButton.tsx` - Help menu
+- `components/help/KeyboardShortcuts.tsx` - Shortcuts modal
+- `app/(dashboard)/help/page.tsx` - Help center
+
+---
+
+## 📦 EXPORT & INTEGRATION FEATURES
+
+### 31. 📤 Export Functionality
+**Status:** Not started  
+**Impact:** MEDIUM - Cannot export data
+
+**Problem:**
+- No way to export tasks or projects
+- No backup functionality
+- Cannot share data with external tools
+
+**What's Needed:**
+```typescript
+// Create: actions/exportActions.ts
+
+Export Formats:
+- CSV (tasks, projects, time entries)
+- PDF (project reports, task lists)
+- JSON (full data export)
+- Excel (XLSX)
+- Markdown (project documentation)
+
+Export Options:
+- Export all tasks
+- Export filtered tasks
+- Export single project
+- Export time reports
+- Export activity logs
+```
+
+**Recommended Libraries:**
+- `papaparse` - CSV generation
+- `jspdf` - PDF generation
+- `xlsx` - Excel generation
+
+**Files to Create:**
+- `actions/exportActions.ts` - Export logic
+- `components/export/ExportButton.tsx` - Export menu
+- `lib/exporters/csvExporter.ts` - CSV export
+- `lib/exporters/pdfExporter.ts` - PDF export
+
+---
+
+### 32. 🔌 API & Webhooks
+**Status:** Not started  
+**Impact:** LOW - Cannot integrate with external tools
+
+**Problem:**
+- No public API
+- No webhooks for external integrations
+- Cannot automate workflows with external tools
+
+**What's Needed:**
+```typescript
+// Create: app/api/v1/[...route]/route.ts
+
+REST API Endpoints:
+- GET /api/v1/tasks - List tasks
+- POST /api/v1/tasks - Create task
+- GET /api/v1/tasks/:id - Get task
+- PUT /api/v1/tasks/:id - Update task
+- DELETE /api/v1/tasks/:id - Delete task
+- Similar endpoints for projects, users, comments
+
+Webhooks:
+- task.created
+- task.updated
+- task.completed
+- project.created
+- comment.added
+
+Authentication:
+- API key authentication
+- Rate limiting per API key
+- Webhook signature verification
+```
+
+**Files to Create:**
+- `app/api/v1/tasks/route.ts` - Task API endpoints
+- `app/api/v1/projects/route.ts` - Project API endpoints
+- `app/api/webhooks/route.ts` - Webhook delivery
+- `lib/apiAuth.ts` - API key validation
+- `app/(dashboard)/settings/api/page.tsx` - API key management
+
+---
+
+### 33. 🔗 Third-Party Integrations
+**Status:** Not started  
+**Impact:** LOW - Nice-to-have integrations
+
+**Potential Integrations:**
+- **Slack** - Task notifications, create tasks from Slack
+- **Google Calendar** - Sync task due dates and meetings
+- **GitHub** - Link commits/PRs to tasks
+- **Jira** - Import/export tasks
+- **Zapier** - Connect to 1000+ apps
+- **Google Drive** - Attach files from Drive
+- **Figma** - Embed design links
+
+**Files to Create:**
+- `lib/integrations/slack.ts` - Slack integration
+- `lib/integrations/github.ts` - GitHub integration
+- `app/(dashboard)/settings/integrations/page.tsx` - Integration settings
+
+---
+
+## 🎯 IMPLEMENTATION PRIORITY MATRIX
+
+### 🔴 CRITICAL (Do First)
+**Impact: HIGH | Effort: LOW-MEDIUM**
+
+1. ✅ **Task Detail Page/Modal** - Unlocks comments, attachments, activity
+2. ✅ **Comments UI Component** - Enable team collaboration
+3. ✅ **Notification Bell** - Users see important updates
+4. ✅ **File Upload Widget** - Complete attachment feature
+5. ✅ **Error Toast System** - User feedback on actions
+6. ✅ **Loading States** - Better UX during async operations
+
+**Estimated Time:** 2-3 weeks  
+**Why Critical:** These features are already built on the backend but completely invisible to users. Implementing them unlocks 30% more functionality with minimal backend work.
+
+---
+
+### 🟠 HIGH PRIORITY (Do Next)
+**Impact: HIGH | Effort: MEDIUM-HIGH**
+
+7. ✅ **Activity Timeline** - Audit trail visibility
+8. ✅ **Confirmation Dialogs** - Prevent accidental deletions
+9. ✅ **TopNav Search** - Make search bar functional
+10. ✅ **User Profile Page** - Edit user settings
+11. ✅ **Password Reset Flow** - User self-service
+12. ✅ **Reporting Dashboard** - Analytics and insights
+
+**Estimated Time:** 3-4 weeks  
+**Why High Priority:** These features significantly improve usability and provide essential functionality for a production PMS.
+
+---
+
+### 🟡 MEDIUM PRIORITY (Do Later)
+**Impact: MEDIUM | Effort: MEDIUM-HIGH**
+
+13. ✅ **WebSocket Real-Time** - Live collaboration
+14. ✅ **Task Dependencies** - Link related tasks
+15. ✅ **Subtasks** - Break down complex tasks
+16. ✅ **Time Tracking** - Track actual time spent
+17. ✅ **Email Notifications** - Alerts outside app
+18. ✅ **Gantt Chart** - Timeline visualization
+
+**Estimated Time:** 4-6 weeks  
+**Why Medium Priority:** These features enhance the product but aren't blocking core workflows.
+
+---
+
+### 🟢 LOW PRIORITY (Nice-to-Have)
+**Impact: LOW-MEDIUM | Effort: MEDIUM-HIGH**
+
+19. ✅ **Recurring Tasks** - Automated task creation
+20. ✅ **Project Templates** - Faster project setup
+21. ✅ **Team Chat** - In-app messaging
+22. ✅ **Advanced Search** - Search operators, saved searches
+23. ✅ **Export Functionality** - CSV, PDF, Excel
+24. ✅ **API & Webhooks** - External integrations
+25. ✅ **Third-Party Integrations** - Slack, GitHub, etc.
+
+**Estimated Time:** 6-8 weeks  
+**Why Low Priority:** These are enhancements that can wait until core features are polished.
+
+---
+
+### 🔵 INFRASTRUCTURE (Ongoing)
+**Impact: HIGH | Effort: MEDIUM**
+
+26. ✅ **Production Database** - Migrate to PostgreSQL
+27. ✅ **Security Hardening** - Rate limiting, CSRF, sanitization
+28. ✅ **Error Monitoring** - Sentry integration
+29. ✅ **CI/CD Pipeline** - Automated deployment
+30. ✅ **Mobile Responsiveness** - Optimize for mobile
+31. ✅ **Accessibility** - WCAG compliance
+32. ✅ **Dark Mode** - Theme switcher
+33. ✅ **Onboarding** - User tutorials
+
+**Estimated Time:** Ongoing  
+**Why Infrastructure:** These are continuous improvements that should be done in parallel with feature development.
+
+---
+
+## 📋 RECOMMENDED DEVELOPMENT ROADMAP
+
+### Phase 1: Complete Existing Features (Weeks 1-3)
+**Goal:** Make all backend features accessible to users
+
+- [ ] Task detail page/modal
+- [ ] Comments UI component
+- [ ] Notification bell component
+- [ ] File upload widget
+- [ ] Activity timeline component
+- [ ] Error toast system
+- [ ] Loading states everywhere
+- [ ] Confirmation dialogs
+
+**Deliverable:** All existing backend features are now usable
+
+---
+
+### Phase 2: Essential UX Improvements (Weeks 4-7)
+**Goal:** Polish core user experience
+
+- [ ] TopNav search functionality
+- [ ] User profile page
+- [ ] Password reset flow
+- [ ] Mobile responsiveness improvements
+- [ ] Accessibility audit and fixes
+- [ ] Dark mode theme switcher
+- [ ] Onboarding tour
+
+**Deliverable:** Production-ready UX
+
+---
+
+### Phase 3: Analytics & Insights (Weeks 8-10)
+**Goal:** Provide visibility into team performance
+
+- [ ] Reporting dashboard with charts
+- [ ] Export functionality (CSV, PDF)
+- [ ] Advanced search features
+- [ ] Gantt chart / timeline view
+
+**Deliverable:** Data-driven decision making
+
+---
+
+### Phase 4: Advanced Collaboration (Weeks 11-15)
+**Goal:** Enable real-time teamwork
+
+- [ ] WebSocket real-time updates
+- [ ] Task dependencies
+- [ ] Subtasks
+- [ ] Time tracking
+- [ ] Email notifications
+
+**Deliverable:** Full-featured collaboration platform
+
+---
+
+### Phase 5: Automation & Integrations (Weeks 16-20)
+**Goal:** Reduce manual work
+
+- [ ] Recurring tasks
+- [ ] Project templates
+- [ ] API & webhooks
+- [ ] Third-party integrations (Slack, GitHub)
+- [ ] Team chat (optional)
+
+**Deliverable:** Automated workflows
+
+---
+
+### Phase 6: Production Hardening (Ongoing)
+**Goal:** Enterprise-ready deployment
+
+- [ ] Migrate to PostgreSQL
+- [ ] Security hardening (rate limiting, CSRF)
+- [ ] Error monitoring (Sentry)
+- [ ] CI/CD pipeline
+- [ ] Performance optimization
+- [ ] Load testing
+
+**Deliverable:** Scalable, secure production system
+
+---
+
+## 🏆 COMPETITIVE FEATURE COMPARISON
+
+### vs Asana
+**NEXUS Has:**
+- ✅ AI task generation (Claude API)
+- ✅ AI risk analysis
+- ✅ Custom flag system
+- ✅ Activity logs
+
+**NEXUS Missing:**
+- ❌ Timeline view (Gantt chart)
+- ❌ Forms for data collection
+- ❌ Portfolios
+- ❌ Goals tracking
+
+---
+
+### vs Jira
+**NEXUS Has:**
+- ✅ Simpler, cleaner UI
+- ✅ AI-powered features
+- ✅ Faster setup
+
+**NEXUS Missing:**
+- ❌ Agile boards (Scrum, Kanban with swimlanes)
+- ❌ Sprint planning
+- ❌ Issue types and workflows
+- ❌ Advanced reporting (burndown, velocity)
+- ❌ Roadmaps
+
+---
+
+### vs Monday.com
+**NEXUS Has:**
+- ✅ AI task generation
+- ✅ Cleaner, less cluttered UI
+
+**NEXUS Missing:**
+- ❌ Multiple board views (timeline, calendar, map)
+- ❌ Automations builder
+- ❌ Integrations marketplace
+- ❌ Dashboards with widgets
+
+---
+
+### vs ClickUp
+**NEXUS Has:**
+- ✅ Simpler, more focused
+- ✅ AI features
+
+**NEXUS Missing:**
+- ❌ Docs and wikis
+- ❌ Goals and OKRs
+- ❌ Mind maps
+- ❌ Whiteboards
+- ❌ Time tracking
+- ❌ Multiple views (15+ views)
+
+---
+
+## 🎯 UNIQUE SELLING POINTS (USPs)
+
+### What Makes NEXUS Special?
+
+1. **🤖 AI-First Approach**
+   - Real Claude API integration (not mock)
+   - AI task generation from natural language
+   - AI risk analysis for tasks
+   - Future: AI-powered task prioritization, workload balancing
+
+2. **🎨 Modern, Clean UI**
+   - Matte aesthetic with glassmorphism
+   - Smooth animations (Framer Motion)
+   - Intuitive drag-and-drop
+   - No clutter, focused on essentials
+
+3. **🚀 Fast & Lightweight**
+   - Next.js 16 with React 19
+   - Server-side rendering for speed
+   - Optimistic UI updates
+   - No bloat, only what you need
+
+4. **🔒 Privacy-Focused**
+   - Self-hosted option
+   - No data mining
+   - Full control over your data
+   - SQLite for simple deployments
+
+5. **🎯 Role-Based Simplicity**
+   - Workers see only their tasks
+   - Admins have full control
+   - No overwhelming features for basic users
+
+---
+
+## 🚀 FUTURE VISION (6-12 Months)
+
+### AI-Powered Features
+- **Smart Task Assignment** - AI suggests best person for each task
+- **Workload Balancing** - AI detects overloaded team members
+- **Deadline Prediction** - AI predicts realistic completion dates
+- **Automated Standup Reports** - AI generates daily summaries
+- **Smart Notifications** - AI filters important vs noise
+
+### Advanced Analytics
+- **Predictive Analytics** - Forecast project completion
+- **Team Performance Insights** - Identify bottlenecks
+- **Burnout Detection** - Alert when team members overworked
+- **Custom Dashboards** - Drag-and-drop widget builder
+
+### Enterprise Features
+- **Multi-Workspace** - Separate workspaces for different teams
+- **SSO Integration** - SAML, OAuth (Google, Microsoft)
+- **Advanced Permissions** - Custom roles and permissions
+- **Audit Logs** - Compliance-ready activity tracking
+- **Data Residency** - Choose where data is stored
+
+---
+
+## 📊 METRICS TO TRACK
+
+### User Engagement
+- Daily active users (DAU)
+- Weekly active users (WAU)
+- Average session duration
+- Tasks created per user per week
+- Comments per task
+- File attachments per task
+
+### Performance
+- Page load time (< 2 seconds)
+- Time to interactive (< 3 seconds)
+- API response time (< 200ms)
+- Error rate (< 0.1%)
+
+### Business
+- User retention rate (> 80% after 30 days)
+- Feature adoption rate
+- Customer satisfaction (NPS score)
+- Support ticket volume
+
+---
+
+## 🎓 CONCLUSION
+
+NEXUS PMS is **75% complete** with a **rock-solid foundation**. The backend is production-ready, but the frontend needs UI components to unlock advanced features. 
+
+### Immediate Next Steps:
+1. **Build task detail page** - This is the keystone feature that enables comments, attachments, and activity logs
+2. **Add notification bell** - Users need to see important updates
+3. **Implement error toasts** - Users need feedback on their actions
+4. **Add loading states** - Improve perceived performance
+
+### Long-Term Vision:
+Transform NEXUS into an **AI-powered, modern alternative to Asana/Jira** with:
+- Real-time collaboration
+- Predictive analytics
+- Smart automation
+- Beautiful, intuitive UI
+- Privacy-focused, self-hostable
+
+**Estimated Time to MVP:** 3-4 weeks (Phase 1 + Phase 2)  
+**Estimated Time to Full Product:** 4-6 months (All phases)
+
+---
+
+**Document Version:** 1.0  
+**Last Updated:** May 22, 2026  
+**Maintained By:** Development Team
