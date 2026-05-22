@@ -8,11 +8,14 @@ import { Calendar, Sparkles, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { deleteTask } from '@/actions/taskActions';
 import { FlagSelector } from './FlagSelector';
+import { TaskDetailModal } from '@/components/task/TaskDetailModal';
 
 export function TaskCard({ task, index }: { task: Task; index: number }) {
   const users = useStore((state) => state.users);
+  const currentUser = useStore((state) => state.currentUser);
   const assignee = users.find((u) => u.id === task.assigneeId);
   const [isPending, startTransition] = React.useTransition();
+  const [showDetailModal, setShowDetailModal] = React.useState(false);
   const flags = React.useMemo(() => {
     if (typeof task.flags === 'string') {
       try {
@@ -55,18 +58,20 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
   };
 
   return (
-    <Draggable draggableId={task.id} index={index}>
-      {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className={cn(
-            'group relative mb-3 rounded-xl border border-[var(--border-color)] bg-[var(--surface-raised)] p-4 shadow-sm transition-all hover:shadow-md hover:border-[var(--border-focus)]',
-            snapshot.isDragging && 'shadow-2xl z-50 rotate-2 border-[var(--accent)]',
-            isPending && 'opacity-70'
-          )}
-        >
+    <>
+      <Draggable draggableId={task.id} index={index}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={() => setShowDetailModal(true)}
+            className={cn(
+              'group relative mb-3 rounded-xl border border-[var(--border-color)] bg-[var(--surface-raised)] p-4 shadow-sm transition-all hover:shadow-md hover:border-[var(--border-focus)] cursor-pointer',
+              snapshot.isDragging && 'shadow-2xl z-50 rotate-2 border-[var(--accent)]',
+              isPending && 'opacity-70'
+            )}
+          >
           {task.aiRisk && (
             <div className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--accent)] text-white shadow-lg animate-pulse" title="High Risk of Delay">
               <Sparkles size={12} />
@@ -76,7 +81,10 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
           <div className="mb-3 flex items-start justify-between gap-2">
             <h4 className="text-sm font-medium text-[var(--foreground)] pr-6">{task.title}</h4>
             <button 
-              onClick={handleDelete}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete();
+              }}
               className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-[var(--muted)] hover:text-red-500"
             >
               <Trash2 size={14} />
@@ -118,11 +126,13 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
               )}
             </div>
             <div className="flex items-center gap-2">
-              <FlagSelector 
-                taskId={task.id} 
-                currentFlags={flags}
-                onFlagsChange={handleFlagsChange}
-              />
+              <div onClick={(e) => e.stopPropagation()}>
+                <FlagSelector 
+                  taskId={task.id} 
+                  currentFlags={flags}
+                  onFlagsChange={handleFlagsChange}
+                />
+              </div>
               {assignee && (
                 <Avatar src={assignee.avatar} alt={assignee.name} className="h-6 w-6" title={assignee.name} />
               )}
@@ -131,5 +141,16 @@ export function TaskCard({ task, index }: { task: Task; index: number }) {
         </div>
       )}
     </Draggable>
+
+    {currentUser && (
+      <TaskDetailModal
+        taskId={task.id}
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        currentUserId={currentUser.id}
+        currentUserRole={currentUser.role}
+      />
+    )}
+  </>
   );
 }

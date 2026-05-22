@@ -39,7 +39,7 @@ export function ActivityItem({ log, isLast }: ActivityItemProps) {
   return (
     <div className="flex gap-3">
       <div className="flex flex-col items-center">
-        <Avatar src={log.user.avatar} alt={log.user.name} size="sm" />
+        <Avatar src={log.user.avatar || undefined} alt={log.user.name} size="sm" />
         {!isLast && (
           <div className="w-px h-full bg-[var(--border-color)] mt-2" />
         )}

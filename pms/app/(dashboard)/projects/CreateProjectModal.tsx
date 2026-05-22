@@ -5,11 +5,11 @@ import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { createProjectAction } from '@/actions/projectActions';
+import toast from 'react-hot-toast';
 
 export function CreateProjectModal({ users = [] }: { users?: { id: string, name: string }[] }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
-  const [error, setError] = React.useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,10 +17,11 @@ export function CreateProjectModal({ users = [] }: { users?: { id: string, name:
     startTransition(async () => {
       const result = await createProjectAction(formData);
       if (result?.error) {
-        setError(result.error);
+        toast.error(result.error);
       } else {
+        toast.success('Project created successfully');
         setIsOpen(false);
-        setError('');
+        e.currentTarget.reset();
       }
     });
   };
@@ -44,12 +45,6 @@ export function CreateProjectModal({ users = [] }: { users?: { id: string, name:
                 <X size={20} />
               </button>
             </div>
-
-            {error && (
-              <div className="mb-4 rounded-md bg-red-500/10 p-3 text-sm text-red-500 text-center">
-                {error}
-              </div>
-            )}
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="space-y-1.5">

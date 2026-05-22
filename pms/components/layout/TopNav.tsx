@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Search, Bell, Menu } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 import { Avatar } from '@/components/ui/Avatar';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { useStore } from '@/store/useStore';
 import { useMounted } from '@/hooks/useMounted';
 
@@ -29,10 +30,9 @@ export function TopNav() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="relative text-[var(--muted)] hover:text-[var(--foreground)] transition-colors cursor-pointer">
-          <Bell size={20} />
-          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-[var(--accent)]"></span>
-        </button>
+        {isMounted && currentUser && (
+          <NotificationBell userId={currentUser.id} />
+        )}
         <div className="flex items-center gap-3 border-l border-[var(--border-color)] pl-4">
           {isMounted && currentUser ? (
             <>

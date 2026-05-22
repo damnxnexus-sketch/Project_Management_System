@@ -83,7 +83,7 @@ export function CommentCard({ comment, currentUserId, onDeleted, onUpdated }: Co
   return (
     <>
       <div className="flex gap-3 p-4 bg-[var(--surface-raised)] rounded-lg border border-[var(--border-color)]">
-        <Avatar src={comment.author.avatar} alt={comment.author.name} />
+        <Avatar src={comment.author.avatar || undefined} alt={comment.author.name} />
         
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">

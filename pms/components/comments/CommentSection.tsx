@@ -43,7 +43,11 @@ export function CommentSection({ taskId, initialComments, currentUserId }: Comme
       if (result.error) {
         toast.error(result.error);
       } else if (result.success && result.comment) {
-        setComments([...comments, result.comment as Comment]);
+        const newComment = {
+          ...result.comment,
+          mentions: [],
+        } as Comment;
+        setComments([...comments, newComment]);
         toast.success('Comment added');
       }
     } catch (error) {
