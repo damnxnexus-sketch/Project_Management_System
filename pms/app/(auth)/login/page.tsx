@@ -82,6 +82,15 @@ export default function LoginPage() {
             {isPending ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
+
+        <div className="mt-6 text-center">
+          <Link
+            href="/forgot-password"
+            className="text-sm text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
+          >
+            Forgot your password?
+          </Link>
+        </div>
       </motion.div>
     </div>
   );

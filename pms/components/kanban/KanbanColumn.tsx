@@ -12,7 +12,7 @@ interface KanbanColumnProps {
 
 export function KanbanColumn({ id, title, tasks }: KanbanColumnProps) {
   return (
-    <div className="flex flex-1 min-w-[280px] shrink-0 flex-col rounded-2xl bg-[var(--surface)] border border-[var(--border-color)] p-4 shadow-sm">
+    <div className="flex flex-1 min-w-[280px] md:min-w-[320px] shrink-0 flex-col rounded-2xl bg-[var(--surface)] border border-[var(--border-color)] p-4 shadow-sm snap-center">
       <div className="mb-4 flex items-center justify-between px-1">
         <h3 className="font-semibold text-[var(--foreground-heading)]">{title}</h3>
         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--background)] text-xs font-medium text-[var(--muted)]">

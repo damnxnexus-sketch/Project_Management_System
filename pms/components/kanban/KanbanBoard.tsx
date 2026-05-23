@@ -61,7 +61,7 @@ export function KanbanBoard({ initialDbTasks }: { initialDbTasks?: Task[] }) {
       <AiPrompt />
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex flex-1 gap-6 overflow-x-auto pb-4 items-start">
+        <div className="flex flex-1 gap-4 md:gap-6 overflow-x-auto pb-4 items-start snap-x snap-mandatory md:snap-none">
           {columns.map((col) => (
             <KanbanColumn
               key={col.id}
