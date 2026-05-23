@@ -54,7 +54,7 @@ export function TopNav() {
         </button>
       </div>
       
-      <div ref={searchRef} className="hidden sm:flex flex-1 max-w-2xl mx-auto relative">
+      <div ref={searchRef} className="hidden sm:flex flex-1 max-w-2xl mx-auto relative" data-tour="search">
         <div className="flex w-full items-center gap-2 rounded-full border border-[var(--border-color)] bg-[var(--surface-raised)] px-4 py-2 focus-within:ring-2 focus-within:ring-[var(--accent)] transition-all">
           <Search className="text-[var(--muted)]" size={18} />
           <input
@@ -83,11 +83,15 @@ export function TopNav() {
       </div>
 
       <div className="flex items-center gap-3">
-        <ThemeSwitcher />
+        <div data-tour="theme-switcher">
+          <ThemeSwitcher />
+        </div>
         {isMounted && currentUser && (
-          <NotificationBell userId={currentUser.id} />
+          <div data-tour="notifications">
+            <NotificationBell userId={currentUser.id} />
+          </div>
         )}
-        <div className="relative flex items-center gap-3 border-l border-[var(--border-color)] pl-3">
+        <div className="relative flex items-center gap-3 border-l border-[var(--border-color)] pl-3" data-tour="user-menu">
           {isMounted && currentUser ? (
             <>
               <button

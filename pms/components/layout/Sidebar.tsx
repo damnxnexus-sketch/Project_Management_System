@@ -41,7 +41,7 @@ export function Sidebar() {
       <aside className={cn(
         "fixed inset-y-0 left-0 z-50 w-64 flex flex-col border-r border-[var(--border-color)] bg-[var(--surface)] transition-transform duration-300 ease-in-out md:translate-x-0",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
+      )} data-tour="sidebar">
         <div className="flex h-16 shrink-0 items-center px-6">
           <h1 className="text-xl font-bold tracking-tight text-[var(--foreground-heading)]">
             NEXUS<span className="text-[var(--accent)]">.</span>
