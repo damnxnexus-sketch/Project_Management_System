@@ -7,7 +7,7 @@ import { Search as SearchIcon } from 'lucide-react';
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: { q?: string; status?: string; priority?: string };
+  searchParams: { q?: string; status?: string; priority?: string; projectId?: string; flag?: string };
 }) {
   const session = await getSession();
   if (!session) redirect('/login');
@@ -15,13 +15,21 @@ export default async function SearchPage({
   const query = searchParams.q || '';
   const statusFilter = searchParams.status || '';
   const priorityFilter = searchParams.priority || '';
+  const projectFilter = searchParams.projectId || '';
+  const flagFilter = searchParams.flag || '';
 
   let tasks: unknown[] = [];
+  const projects = await prisma.project.findMany({
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' },
+  });
 
-  if (query) {
-    const where: Record<string, unknown> = {
-      OR: [{ title: { contains: query } }, { description: { contains: query } }],
-    };
+  if (query || statusFilter || priorityFilter || projectFilter || flagFilter) {
+    const where: Record<string, unknown> = {};
+
+    if (query) {
+      where.OR = [{ title: { contains: query } }, { description: { contains: query } }];
+    }
 
     if (session.role === 'Worker') {
       where.assigneeId = session.userId;
@@ -33,6 +41,14 @@ export default async function SearchPage({
 
     if (priorityFilter) {
       where.priority = priorityFilter;
+    }
+
+    if (projectFilter) {
+      where.projectId = projectFilter;
+    }
+
+    if (flagFilter) {
+      where.flags = { contains: flagFilter };
     }
 
     tasks = await prisma.task.findMany({
@@ -98,6 +114,30 @@ export default async function SearchPage({
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
+            </select>
+
+            <select
+              name="projectId"
+              defaultValue={projectFilter}
+              className="px-4 py-2 bg-[var(--surface)] border border-[var(--border-color)] rounded-lg text-[var(--foreground)]"
+            >
+              <option value="">All Projects</option>
+              {projects.map((project: any) => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="flag"
+              defaultValue={flagFilter}
+              className="px-4 py-2 bg-[var(--surface)] border border-[var(--border-color)] rounded-lg text-[var(--foreground)]"
+            >
+              <option value="">All Flags</option>
+              <option value="urgent">Urgent</option>
+              <option value="blocked">Blocked</option>
+              <option value="needs-review">Needs Review</option>
             </select>
           </div>
         </form>
