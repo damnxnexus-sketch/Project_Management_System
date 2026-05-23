@@ -22,8 +22,8 @@ export async function GET(request: NextRequest) {
     const tasks = await prisma.task.findMany({
       where: {
         OR: [
-          { title: { contains: searchTerm, mode: 'insensitive' } },
-          { description: { contains: searchTerm, mode: 'insensitive' } },
+          { title: { contains: searchTerm } },
+          { description: { contains: searchTerm } },
         ],
       },
       include: {
@@ -37,8 +37,8 @@ export async function GET(request: NextRequest) {
     const projects = await prisma.project.findMany({
       where: {
         OR: [
-          { name: { contains: searchTerm, mode: 'insensitive' } },
-          { description: { contains: searchTerm, mode: 'insensitive' } },
+          { name: { contains: searchTerm } },
+          { description: { contains: searchTerm } },
         ],
       },
       take: 5,

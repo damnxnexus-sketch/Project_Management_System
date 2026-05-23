@@ -35,7 +35,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex items-center gap-6">
-        <Avatar src={user.avatar} alt={user.name} size="lg" />
+        <Avatar src={user.avatar || undefined} alt={user.name} size="lg" />
         <div>
           <p className="text-sm font-medium text-[var(--foreground)] mb-1">
             Profile Picture

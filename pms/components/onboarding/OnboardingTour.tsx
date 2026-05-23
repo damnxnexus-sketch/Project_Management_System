@@ -1,7 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import Joyride, { Step, CallBackProps, STATUS } from 'react-joyride';
+import dynamic from 'next/dynamic';
+import type { Step, CallBackProps } from 'react-joyride';
+
+const Joyride = dynamic(() => import('react-joyride'), { ssr: false });
+const STATUS = {
+  FINISHED: 'finished',
+  SKIPPED: 'skipped',
+} as const;
 
 const steps: Step[] = [
   {
