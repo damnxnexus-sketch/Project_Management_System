@@ -1,7 +1,6 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopNav } from "@/components/layout/TopNav";
 import { StoreInitializer } from "@/components/providers/StoreInitializer";
-import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 import { SkipToContent } from "@/components/ui/SkipToContent";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -47,7 +46,6 @@ export default async function DashboardLayout({
           {children}
         </main>
       </div>
-      <OnboardingTour />
     </div>
   );
 }
