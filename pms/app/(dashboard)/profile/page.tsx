@@ -1,16 +1,16 @@
-import { verifySession } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { getUserProfile } from '@/actions/userActions';
 import { ProfileForm } from './ProfileForm';
 import { PasswordChangeForm } from './PasswordChangeForm';
 
 export default async function ProfilePage() {
-  const session = await verifySession();
+  const session = await getSession();
   if (!session) {
     redirect('/login');
   }
 
-  const user = await getUserProfile(session.userId);
+  const user = await getUserProfile(session.userId as string);
   if (!user) {
     redirect('/login');
   }

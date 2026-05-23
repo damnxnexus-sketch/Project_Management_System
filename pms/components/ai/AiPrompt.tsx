@@ -30,7 +30,7 @@ export function AiPrompt() {
   };
 
   return (
-    <div className="mb-8 w-full max-w-3xl">
+    <div className="mb-8 w-full max-w-3xl" data-tour="ai-prompt">
       <form onSubmit={handleSubmit} className="relative">
         <motion.div
           animate={{

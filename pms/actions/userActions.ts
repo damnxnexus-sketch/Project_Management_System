@@ -1,13 +1,13 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
-import { verifySession } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 import bcrypt from 'bcryptjs';
 
 export async function updateUserProfile(formData: FormData) {
   try {
-    const session = await verifySession();
+    const session = await getSession();
     if (!session) {
       return { success: false, error: 'Unauthorized' };
     }
@@ -29,7 +29,7 @@ export async function updateUserProfile(formData: FormData) {
     }
 
     await prisma.user.update({
-      where: { id: session.userId },
+      where: { id: session.userId as string },
       data: { name, email },
     });
 
@@ -43,7 +43,7 @@ export async function updateUserProfile(formData: FormData) {
 
 export async function changePassword(formData: FormData) {
   try {
-    const session = await verifySession();
+    const session = await getSession();
     if (!session) {
       return { success: false, error: 'Unauthorized' };
     }
@@ -65,7 +65,7 @@ export async function changePassword(formData: FormData) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { id: session.userId },
+      where: { id: session.userId as string },
     });
 
     if (!user) {
@@ -80,7 +80,7 @@ export async function changePassword(formData: FormData) {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
-      where: { id: session.userId },
+      where: { id: session.userId as string },
       data: { password: hashedPassword },
     });
 
@@ -93,7 +93,7 @@ export async function changePassword(formData: FormData) {
 
 export async function getUserProfile(userId: string) {
   try {
-    const session = await verifySession();
+    const session = await getSession();
     if (!session) {
       return null;
     }
