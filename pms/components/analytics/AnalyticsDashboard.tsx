@@ -77,7 +77,6 @@ export default function AnalyticsDashboard() {
           title="Completion Rate"
           value={`${analytics.taskCompletionRate}%`}
           subtitle={`${analytics.completedTasks}/${analytics.totalTasks} tasks`}
-          trend="up"
         />
         <MetricCard
           title="Total Tasks"
@@ -109,7 +108,7 @@ export default function AnalyticsDashboard() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(props: any) => `${props.status}: ${props.count}`}
+                label={(props) => `${(props as unknown as { status: string; count: number }).status}: ${(props as unknown as { status: string; count: number }).count}`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="count"
@@ -177,7 +176,7 @@ export default function AnalyticsDashboard() {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all"
+                      className="bg-linear-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all"
                       style={{ width: `${project.progress}%` }}
                     />
                   </div>
@@ -255,11 +254,10 @@ interface MetricCardProps {
   title: string;
   value: string | number;
   subtitle?: string;
-  trend?: 'up' | 'down';
   alert?: boolean;
 }
 
-function MetricCard({ title, value, subtitle, trend, alert }: MetricCardProps) {
+function MetricCard({ title, value, subtitle, alert }: MetricCardProps) {
   return (
     <div
       className={`rounded-lg p-6 ${alert ? 'bg-red-50 border border-red-200' : 'bg-white border border-gray-200'}`}
