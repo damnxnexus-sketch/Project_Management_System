@@ -2,13 +2,12 @@
 
 import React, { useState } from 'react';
 import { getExportData } from '@/actions/analyticsActions';
-import { generatePDF } from '@/lib/pdfExporter';
 import { toast } from '@/lib/toast';
 import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard';
 import GanttChart from '@/components/analytics/GanttChart';
 
 export function ReportsClient() {
-  const [activeTab, setActiveTab] = useState<'analytics' | 'export'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'export' | 'gantt'>('analytics');
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportCSV = async () => {
@@ -43,7 +42,7 @@ export function ReportsClient() {
         document.body.removeChild(link);
         toast.success('Tasks exported as CSV');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to export CSV');
     } finally {
       setIsExporting(false);
@@ -67,7 +66,7 @@ export function ReportsClient() {
         document.body.removeChild(link);
         toast.success('Tasks exported as JSON');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to export JSON');
     } finally {
       setIsExporting(false);
@@ -88,6 +87,16 @@ export function ReportsClient() {
           Analytics
         </button>
         <button
+          onClick={() => setActiveTab('gantt')}
+          className={`px-4 py-2 font-medium transition ${
+            activeTab === 'gantt'
+              ? 'text-purple-600 border-b-2 border-purple-600'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Timeline
+        </button>
+        <button
           onClick={() => setActiveTab('export')}
           className={`px-4 py-2 font-medium transition ${
             activeTab === 'export'
@@ -100,6 +109,16 @@ export function ReportsClient() {
       </div>
 
       {activeTab === 'analytics' && <AnalyticsDashboard />}
+
+      {activeTab === 'gantt' && (
+        <div className="space-y-4 p-6">
+          <div>
+            <h2 className="text-2xl font-bold">Project Timeline</h2>
+            <p className="text-gray-600 mt-2">Visual Gantt chart of all project schedules</p>
+          </div>
+          <GanttChart />
+        </div>
+      )}
 
       {activeTab === 'export' && (
         <div className="space-y-6 p-6">
@@ -153,3 +172,4 @@ function ExportCard({ title, description, format, onClick, disabled }: ExportCar
     </div>
   );
 }
+
