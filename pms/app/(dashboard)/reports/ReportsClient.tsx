@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import { getExportData } from '@/actions/analyticsActions';
+import { generatePDF } from '@/lib/pdfExporter';
 import { toast } from '@/lib/toast';
 import AnalyticsDashboard from '@/components/analytics/AnalyticsDashboard';
+import GanttChart from '@/components/analytics/GanttChart';
 
 export function ReportsClient() {
   const [activeTab, setActiveTab] = useState<'analytics' | 'export'>('analytics');
