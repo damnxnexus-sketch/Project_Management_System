@@ -29,8 +29,8 @@ export function useTheme() {
         root.style.setProperty('--foreground', '#e3e3e3');
         root.style.setProperty('--foreground-heading', '#ffffff');
         root.style.setProperty('--muted', '#a0a0a0');
-        root.style.setProperty('--accent', '#dc2626');
-        root.style.setProperty('--accent-hover', '#b91c1c');
+        root.style.setProperty('--accent', '#722f37');
+        root.style.setProperty('--accent-hover', '#8a3842');
         root.style.setProperty('--border-color', '#383838');
         root.style.setProperty('--border-focus', '#505050');
         root.style.setProperty('--status-todo', '#3b82f6');
@@ -49,8 +49,8 @@ export function useTheme() {
         root.style.setProperty('--foreground', '#1a1a1a');
         root.style.setProperty('--foreground-heading', '#000000');
         root.style.setProperty('--muted', '#666666');
-        root.style.setProperty('--accent', '#dc2626');
-        root.style.setProperty('--accent-hover', '#b91c1c');
+        root.style.setProperty('--accent', '#722f37');
+        root.style.setProperty('--accent-hover', '#8a3842');
         root.style.setProperty('--border-color', '#e0e0e0');
         root.style.setProperty('--border-focus', '#c0c0c0');
         root.style.setProperty('--status-todo', '#3b82f6');
