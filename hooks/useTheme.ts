@@ -29,10 +29,18 @@ export function useTheme() {
         root.style.setProperty('--foreground', '#e3e3e3');
         root.style.setProperty('--foreground-heading', '#ffffff');
         root.style.setProperty('--muted', '#a0a0a0');
-        root.style.setProperty('--accent', '#722f37');
-        root.style.setProperty('--accent-hover', '#8a3842');
+        root.style.setProperty('--accent', '#dc2626');
+        root.style.setProperty('--accent-hover', '#b91c1c');
         root.style.setProperty('--border-color', '#383838');
         root.style.setProperty('--border-focus', '#505050');
+        root.style.setProperty('--status-todo', '#3b82f6');
+        root.style.setProperty('--status-in-progress', '#f59e0b');
+        root.style.setProperty('--status-in-review', '#8b5cf6');
+        root.style.setProperty('--status-done', '#10b981');
+        root.style.setProperty('--info', '#3b82f6');
+        root.style.setProperty('--warning', '#f59e0b');
+        root.style.setProperty('--success', '#10b981');
+        root.style.setProperty('--error', '#ef4444');
         setResolvedTheme('dark');
       } else {
         root.style.setProperty('--background', '#f5f5f5');
@@ -41,10 +49,18 @@ export function useTheme() {
         root.style.setProperty('--foreground', '#1a1a1a');
         root.style.setProperty('--foreground-heading', '#000000');
         root.style.setProperty('--muted', '#666666');
-        root.style.setProperty('--accent', '#722f37');
-        root.style.setProperty('--accent-hover', '#8a3842');
+        root.style.setProperty('--accent', '#dc2626');
+        root.style.setProperty('--accent-hover', '#b91c1c');
         root.style.setProperty('--border-color', '#e0e0e0');
         root.style.setProperty('--border-focus', '#c0c0c0');
+        root.style.setProperty('--status-todo', '#3b82f6');
+        root.style.setProperty('--status-in-progress', '#f59e0b');
+        root.style.setProperty('--status-in-review', '#8b5cf6');
+        root.style.setProperty('--status-done', '#10b981');
+        root.style.setProperty('--info', '#3b82f6');
+        root.style.setProperty('--warning', '#f59e0b');
+        root.style.setProperty('--success', '#10b981');
+        root.style.setProperty('--error', '#ef4444');
         setResolvedTheme('light');
       }
     };

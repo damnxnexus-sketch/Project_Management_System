@@ -67,8 +67,8 @@ export default function AnalyticsDashboard() {
     <div className="space-y-8 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
-        <p className="text-gray-600 mt-2">Comprehensive project and team performance insights</p>
+        <h1 className="text-3xl font-bold text-foreground">Analytics Dashboard</h1>
+        <p className="text-muted mt-2">Comprehensive project and team performance insights</p>
       </div>
 
       {/* Key Metrics */}
@@ -164,19 +164,19 @@ export default function AnalyticsDashboard() {
         <ChartCard title="Project Progress">
           <div className="space-y-4">
             {analytics.projectProgress.length === 0 ? (
-              <p className="text-gray-500">No projects yet</p>
+              <p className="text-muted">No projects yet</p>
             ) : (
               analytics.projectProgress.map((project) => (
                 <div key={project.id} className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="font-medium">{project.name}</span>
-                    <span className="text-sm text-gray-600">
+                    <span className="font-medium text-foreground">{project.name}</span>
+                    <span className="text-sm text-muted">
                       {project.completedCount}/{project.taskCount} tasks
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-border rounded-full h-2">
                     <div
-                      className="bg-linear-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all"
+                      className="bg-linear-to-r from-accent to-error h-2 rounded-full transition-all"
                       style={{ width: `${project.progress}%` }}
                     />
                   </div>
@@ -191,19 +191,19 @@ export default function AnalyticsDashboard() {
       <ChartCard title="Team Workload Analysis">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="border-b border-gray-200">
+            <thead className="border-b border-border">
               <tr className="text-left">
-                <th className="pb-3 font-semibold">Team Member</th>
-                <th className="pb-3 font-semibold text-right">Assigned</th>
-                <th className="pb-3 font-semibold text-right">Completed</th>
-                <th className="pb-3 font-semibold text-right">Overdue</th>
-                <th className="pb-3 font-semibold text-right">Completion %</th>
+                <th className="pb-3 font-semibold text-foreground">Team Member</th>
+                <th className="pb-3 font-semibold text-right text-foreground">Assigned</th>
+                <th className="pb-3 font-semibold text-right text-foreground">Completed</th>
+                <th className="pb-3 font-semibold text-right text-foreground">Overdue</th>
+                <th className="pb-3 font-semibold text-right text-foreground">Completion %</th>
               </tr>
             </thead>
             <tbody>
               {analytics.teamWorkload.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-4 text-center text-gray-500">
+                  <td colSpan={5} className="py-4 text-center text-muted">
                     No team members
                   </td>
                 </tr>
@@ -211,13 +211,13 @@ export default function AnalyticsDashboard() {
                 analytics.teamWorkload.map((member) => {
                   const completionPercent = member.assignedTasks > 0 ? Math.round((member.completedTasks / member.assignedTasks) * 100) : 0;
                   return (
-                    <tr key={member.id} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="py-3">{member.name}</td>
-                      <td className="py-3 text-right">{member.assignedTasks}</td>
-                      <td className="py-3 text-right text-green-600">{member.completedTasks}</td>
-                      <td className="py-3 text-right text-red-600">{member.overdueTasks}</td>
+                    <tr key={member.id} className="border-b border-border hover:bg-surface-raised">
+                      <td className="py-3 text-foreground">{member.name}</td>
+                      <td className="py-3 text-right text-foreground">{member.assignedTasks}</td>
+                      <td className="py-3 text-right text-success">{member.completedTasks}</td>
+                      <td className="py-3 text-right text-error">{member.overdueTasks}</td>
                       <td className="py-3 text-right">
-                        <span className={completionPercent >= 75 ? 'text-green-600' : 'text-orange-600'}>{completionPercent}%</span>
+                        <span className={completionPercent >= 75 ? 'text-success' : 'text-warning'}>{completionPercent}%</span>
                       </td>
                     </tr>
                   );
@@ -260,11 +260,11 @@ interface MetricCardProps {
 function MetricCard({ title, value, subtitle, alert }: MetricCardProps) {
   return (
     <div
-      className={`rounded-lg p-6 ${alert ? 'bg-red-50 border border-red-200' : 'bg-white border border-gray-200'}`}
+      className={`rounded-lg p-6 ${alert ? 'bg-red-50 border border-red-200 dark:bg-red-950 dark:border-red-900' : 'bg-surface border border-border'}`}
     >
-      <p className="text-gray-600 text-sm">{title}</p>
-      <p className={`text-3xl font-bold mt-2 ${alert ? 'text-red-600' : ''}`}>{value}</p>
-      {subtitle && <p className="text-gray-600 text-xs mt-2">{subtitle}</p>}
+      <p className="text-muted text-sm">{title}</p>
+      <p className={`text-3xl font-bold mt-2 ${alert ? 'text-red-600' : 'text-foreground'}`}>{value}</p>
+      {subtitle && <p className="text-muted text-xs mt-2">{subtitle}</p>}
     </div>
   );
 }
@@ -276,8 +276,8 @@ interface ChartCardProps {
 
 function ChartCard({ title, children }: ChartCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold mb-6">{title}</h2>
+    <div className="bg-surface rounded-lg border border-border p-6">
+      <h2 className="text-lg font-semibold mb-6 text-foreground">{title}</h2>
       {children}
     </div>
   );
