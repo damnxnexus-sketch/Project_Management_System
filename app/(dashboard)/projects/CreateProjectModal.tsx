@@ -13,15 +13,16 @@ export function CreateProjectModal({ users = [] }: { users?: { id: string, name:
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const formElement = e.currentTarget;
+    const formData = new FormData(formElement);
     startTransition(async () => {
       const result = await createProjectAction(formData);
       if (result?.error) {
         toast.error(result.error);
       } else {
         toast.success('Project created successfully');
+        formElement.reset();
         setIsOpen(false);
-        e.currentTarget.reset();
       }
     });
   };
