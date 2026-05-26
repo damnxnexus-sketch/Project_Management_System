@@ -100,7 +100,7 @@ export default function GanttChart() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent"></div>
       </div>
     );
   }
@@ -118,8 +118,8 @@ export default function GanttChart() {
 
   if (data.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
-        <p className="text-gray-600">No projects with tasks found</p>
+      <div className="bg-surface border border-border rounded-lg p-12 text-center">
+        <p className="text-muted">No projects with tasks found</p>
       </div>
     );
   }
@@ -132,12 +132,12 @@ export default function GanttChart() {
             <div key={project.id} className="mb-8">
               {/* Project Header */}
               <div
-                className="flex items-center gap-4 p-4 bg-linear-to-r from-purple-50 to-blue-50 rounded-lg cursor-pointer hover:from-purple-100 hover:to-blue-100 transition border border-purple-200"
+                className="flex items-center gap-4 p-4 bg-linear-to-r from-surface to-surface-raised rounded-lg cursor-pointer hover:from-surface-raised hover:to-surface-raised transition border border-border"
                 onClick={() => toggleProject(project.id)}
               >
                 <div className="shrink-0">
                   <svg
-                    className={`w-5 h-5 text-purple-600 transition-transform ${expandedProjects.has(project.id) ? 'rotate-90' : ''}`}
+                    className={`w-5 h-5 text-accent transition-transform ${expandedProjects.has(project.id) ? 'rotate-90' : ''}`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -145,15 +145,15 @@ export default function GanttChart() {
                   </svg>
                 </div>
                 <div className="grow">
-                  <h3 className="font-semibold text-gray-900">{project.name}</h3>
-                  <p className="text-sm text-gray-600">
+                  <h3 className="font-semibold text-foreground">{project.name}</h3>
+                  <p className="text-sm text-muted">
                     {formatDate(project.startDate)} - {formatDate(project.endDate)}
                   </p>
                 </div>
                 <div className="shrink-0 text-right">
-                  <div className="text-sm font-medium text-gray-900">{project.progress}% Progress</div>
-                  <div className="w-32 h-2 bg-gray-300 rounded-full mt-1 overflow-hidden">
-                    <div className="h-full bg-green-500" style={{ width: `${project.progress}%` }}></div>
+                  <div className="text-sm font-medium text-foreground">{project.progress}% Progress</div>
+                  <div className="w-32 h-2 bg-border rounded-full mt-1 overflow-hidden">
+                    <div className="h-full bg-success" style={{ width: `${project.progress}%` }}></div>
                   </div>
                 </div>
               </div>
@@ -165,7 +165,7 @@ export default function GanttChart() {
                   <div className="flex items-start">
                     <div className="w-32 shrink-0"></div>
                     <div className="grow">
-                      <div className="grid grid-cols-12 gap-0 text-xs text-gray-500 px-2">
+                      <div className="grid grid-cols-12 gap-0 text-xs text-muted px-2">
                         {Array.from({ length: 13 }).map((_, i) => (
                           <div key={i} className="text-center">
                             W{i}
@@ -178,17 +178,17 @@ export default function GanttChart() {
                   {/* Tasks */}
                   {project.tasks.map((task) => {
                     const position = calculatePosition(task.startDate, task.endDate, project.startDate, project.endDate);
-                    const statusColor = statusColors[task.status] || 'bg-gray-400';
+                    const statusColor = statusColors[task.status] || 'bg-border';
 
                     return (
                       <div key={task.id} className="flex items-center gap-2">
                         <div className="w-32 shrink-0 overflow-hidden">
-                          <div className={`text-sm font-medium text-gray-900 truncate ${priorityStyles[task.priority] || ''}`}>
+                          <div className={`text-sm font-medium text-foreground truncate ${priorityStyles[task.priority] || ''}`}>
                             {task.title}
                           </div>
-                          <div className="text-xs text-gray-500">{task.status}</div>
+                          <div className="text-xs text-muted">{task.status}</div>
                         </div>
-                        <div className="grow relative h-10 bg-gray-100 rounded overflow-hidden">
+                        <div className="grow relative h-10 bg-surface-raised rounded overflow-hidden">
                           <div
                             className={`absolute top-1 bottom-1 ${statusColor} rounded opacity-80 hover:opacity-100 transition flex items-center px-2`}
                             style={{
@@ -212,13 +212,13 @@ export default function GanttChart() {
       </div>
 
       {/* Legend */}
-      <div className="border-t pt-4 mt-6">
-        <h4 className="text-sm font-semibold text-gray-900 mb-3">Status Legend</h4>
+      <div className="border-t border-border pt-4 mt-6">
+        <h4 className="text-sm font-semibold text-foreground mb-3">Status Legend</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {Object.entries(statusColors).map(([status, color]) => (
             <div key={status} className="flex items-center gap-2">
               <div className={`w-4 h-4 rounded ${color}`}></div>
-              <span className="text-sm text-gray-600 capitalize">{status.replace('-', ' ')}</span>
+              <span className="text-sm text-muted capitalize">{status.replace('-', ' ')}</span>
             </div>
           ))}
         </div>
@@ -226,12 +226,12 @@ export default function GanttChart() {
 
       {/* Priority Legend */}
       <div className="mt-4">
-        <h4 className="text-sm font-semibold text-gray-900 mb-3">Priority Legend</h4>
+        <h4 className="text-sm font-semibold text-foreground mb-3">Priority Legend</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {Object.entries(priorityStyles).map(([priority, style]) => (
             <div key={priority} className="flex items-center gap-2">
               <div className={`w-4 h-1 ${style}`}></div>
-              <span className="text-sm text-gray-600 capitalize">{priority}</span>
+              <span className="text-sm text-muted capitalize">{priority}</span>
             </div>
           ))}
         </div>

@@ -1,18 +1,46 @@
 @import "tailwindcss";
 
 :root {
+  /* Dark mode (default) */
   --background: #0f0f0f;
   --surface: #1e1e1e;
   --surface-raised: #282828;
   --foreground: #e3e3e3;
   --foreground-heading: #ffffff;
   --muted: #a0a0a0;
-  --accent: #722f37;
-  --accent-hover: #8a3842;
+  --accent: #dc2626;
+  --accent-hover: #b91c1c;
   --border-color: #383838;
   --border-focus: #505050;
-  /* Retain glass-bg temporarily mapped to surface for safety during migration */
   --glass-bg: var(--surface);
+  
+  /* Status colors for light/dark */
+  --status-todo: #3b82f6;
+  --status-in-progress: #f59e0b;
+  --status-in-review: #8b5cf6;
+  --status-done: #10b981;
+  
+  /* Additional semantic colors */
+  --info: #3b82f6;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --error: #ef4444;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f5f5f5;
+    --surface: #ffffff;
+    --surface-raised: #f9f9f9;
+    --foreground: #1a1a1a;
+    --foreground-heading: #000000;
+    --muted: #666666;
+    --accent: #dc2626;
+    --accent-hover: #b91c1c;
+    --border-color: #e0e0e0;
+    --border-focus: #c0c0c0;
+    --glass-bg: var(--surface);
+  }
 }
 
 @theme inline {

@@ -75,13 +75,13 @@ export function ReportsClient() {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 border-b border-gray-200">
+      <div className="flex gap-4 border-b border-border">
         <button
           onClick={() => setActiveTab('analytics')}
           className={`px-4 py-2 font-medium transition ${
             activeTab === 'analytics'
-              ? 'text-purple-600 border-b-2 border-purple-600'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'text-accent border-b-2 border-accent'
+              : 'text-muted hover:text-foreground'
           }`}
         >
           Analytics
@@ -90,8 +90,8 @@ export function ReportsClient() {
           onClick={() => setActiveTab('gantt')}
           className={`px-4 py-2 font-medium transition ${
             activeTab === 'gantt'
-              ? 'text-purple-600 border-b-2 border-purple-600'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'text-accent border-b-2 border-accent'
+              : 'text-muted hover:text-foreground'
           }`}
         >
           Timeline
@@ -100,8 +100,8 @@ export function ReportsClient() {
           onClick={() => setActiveTab('export')}
           className={`px-4 py-2 font-medium transition ${
             activeTab === 'export'
-              ? 'text-purple-600 border-b-2 border-purple-600'
-              : 'text-gray-600 hover:text-gray-900'
+              ? 'text-accent border-b-2 border-accent'
+              : 'text-muted hover:text-foreground'
           }`}
         >
           Export Data
@@ -113,8 +113,8 @@ export function ReportsClient() {
       {activeTab === 'gantt' && (
         <div className="space-y-4 p-6">
           <div>
-            <h2 className="text-2xl font-bold">Project Timeline</h2>
-            <p className="text-gray-600 mt-2">Visual Gantt chart of all project schedules</p>
+            <h2 className="text-2xl font-bold text-foreground">Project Timeline</h2>
+            <p className="text-muted mt-2">Visual Gantt chart of all project schedules</p>
           </div>
           <GanttChart />
         </div>
@@ -123,8 +123,8 @@ export function ReportsClient() {
       {activeTab === 'export' && (
         <div className="space-y-6 p-6">
           <div>
-            <h2 className="text-2xl font-bold">Export Data</h2>
-            <p className="text-gray-600 mt-2">Download your tasks in various formats</p>
+            <h2 className="text-2xl font-bold text-foreground">Export Data</h2>
+            <p className="text-muted mt-2">Download your tasks in various formats</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -159,13 +159,13 @@ interface ExportCardProps {
 
 function ExportCard({ title, description, format, onClick, disabled }: ExportCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 hover:border-purple-300 transition">
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-gray-600 text-sm mb-4">{description}</p>
+    <div className="bg-surface rounded-lg border border-border p-6 hover:border-accent transition">
+      <h3 className="text-lg font-semibold mb-2 text-foreground">{title}</h3>
+      <p className="text-muted text-sm mb-4">{description}</p>
       <button
         onClick={onClick}
         disabled={disabled}
-        className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400 transition font-medium"
+        className="w-full px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent-hover disabled:bg-muted transition font-medium"
       >
         {disabled ? 'Exporting...' : `Download ${format}`}
       </button>
