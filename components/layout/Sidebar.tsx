@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FolderKanban, Users, Sparkles, LogOut, CalendarCheck, Video, Search, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Users, Sparkles, LogOut, CalendarCheck, Video, Search, BarChart3, CheckSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/store/useStore';
@@ -14,6 +14,7 @@ const navItems = [
   { name: 'Projects', href: '/projects', icon: FolderKanban },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Search', href: '/search', icon: Search },
+  { name: 'Daily Updates', href: '/daily-updates', icon: CheckSquare },
   { name: 'Team', href: '/admin', icon: Users },
   { name: 'Allotment', href: '/allotment', icon: CalendarCheck },
   { name: 'Meetings', href: '/meetings', icon: Video },

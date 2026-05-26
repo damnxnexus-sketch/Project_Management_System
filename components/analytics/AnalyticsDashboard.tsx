@@ -92,7 +92,7 @@ export default function AnalyticsDashboard() {
         <MetricCard
           title="High Risk Tasks"
           value={analytics.highRiskTasks}
-          subtitle="AI-flagged"
+          subtitle="AI-flagged (Under Development)"
           alert={analytics.highRiskTasks > 0}
         />
       </div>
