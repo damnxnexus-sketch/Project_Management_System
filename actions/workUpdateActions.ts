@@ -17,7 +17,8 @@ export interface WorkUpdateInput {
 
 export async function createWorkUpdate(data: WorkUpdateInput) {
   try {
-    const session = await getSession() as any;
+    const sessionUnknown = await getSession();
+    const session = sessionUnknown as { userId?: string; role?: string } | null;
     if (!session || !session.userId) {
       console.error('No session found');
       return { error: 'Unauthorized - Please log in again' };
@@ -27,7 +28,22 @@ export async function createWorkUpdate(data: WorkUpdateInput) {
       return { error: 'Work description is required' };
     }
 
-    console.log('Creating work update for user:', session.userId);
+    console.log('Creating work update for user:', session.userId, 'payload:', {
+      taskId: data.taskId,
+      hoursSpent: data.hoursSpent,
+      progressAdded: data.progressAdded,
+      status: data.status,
+      priority: data.priority,
+    });
+
+    // Validate taskId if provided
+    if (data.taskId) {
+      const taskExists = await prisma.task.findUnique({ where: { id: data.taskId }, select: { id: true } });
+      if (!taskExists) {
+        console.error('Invalid taskId provided to createWorkUpdate:', data.taskId);
+        return { error: 'Invalid task ID' };
+      }
+    }
 
     const workUpdate = await prisma.workUpdate.create({
       data: {
@@ -127,8 +143,10 @@ export async function createWorkUpdate(data: WorkUpdateInput) {
 
     return { success: true, workUpdate };
   } catch (error) {
-    console.error('Failed to create work update:', error);
-    return { error: 'Failed to save work update' };
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error('Failed to create work update:', errMsg);
+    // Return the message (safe string) so client can show a helpful message
+    return { error: errMsg || 'Failed to save work update' };
   }
 }
 
