@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'NEXUS | AI Project Management',
   description: 'High-end AI-enabled Project and Team Management System.',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +32,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-screen flex flex-col bg-[var(--background)] text-[var(--foreground)]">
+      <body className="min-h-screen flex flex-col bg-background text-foreground">
         {children}
         <Toaster />
       </body>
