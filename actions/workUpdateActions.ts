@@ -17,18 +17,21 @@ export interface WorkUpdateInput {
 
 export async function createWorkUpdate(data: WorkUpdateInput) {
   try {
-    const session = await getSession() as { userId: string; role: string } | null;
-    if (!session) {
-      return { error: 'Unauthorized' };
+    const session = await getSession() as any;
+    if (!session || !session.userId) {
+      console.error('No session found');
+      return { error: 'Unauthorized - Please log in again' };
     }
 
     if (!data.workDone || data.workDone.trim().length === 0) {
       return { error: 'Work description is required' };
     }
 
+    console.log('Creating work update for user:', session.userId);
+
     const workUpdate = await prisma.workUpdate.create({
       data: {
-        userId: session.userId as string,
+        userId: session.userId,
         taskId: data.taskId || null,
         workDone: data.workDone,
         hoursSpent: data.hoursSpent ? parseFloat(data.hoursSpent.toString()) : null,
@@ -45,6 +48,8 @@ export async function createWorkUpdate(data: WorkUpdateInput) {
         task: { select: { title: true, projectId: true } },
       },
     });
+
+    console.log('Work update created successfully:', workUpdate.id);
 
     // If task is specified and progress is updated, update the task progress
     if (data.taskId && data.progressAdded && data.progressAdded > 0) {
