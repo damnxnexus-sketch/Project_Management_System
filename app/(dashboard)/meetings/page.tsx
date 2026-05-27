@@ -11,6 +11,26 @@ export default async function MeetingsPage() {
 
   const meetings = await prisma.meeting.findMany({
     orderBy: { date: 'asc' },
+    include: {
+      attendees: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        }
+      }
+    }
+  });
+
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      avatar: true,
+    },
+    orderBy: { name: 'asc' }
   });
 
   const isAdmin = session.role === 'Admin' || session.role === 'Master Admin';
@@ -43,6 +63,27 @@ export default async function MeetingsPage() {
                       <span className="flex items-center gap-1"><Calendar size={14} /> {meeting.date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</span>
                       <span className="flex items-center gap-1"><Clock size={14} /> {meeting.date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
+                    {meeting.attendees.length > 0 && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <span className="text-xs text-[var(--muted)]">{meeting.attendees.length} attendee(s):</span>
+                        <div className="flex -space-x-2">
+                          {meeting.attendees.slice(0, 3).map(attendee => (
+                            <img
+                              key={attendee.id}
+                              src={attendee.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${attendee.name}`}
+                              alt={attendee.name}
+                              className="w-6 h-6 rounded-full border border-[var(--surface)]"
+                              title={attendee.name}
+                            />
+                          ))}
+                          {meeting.attendees.length > 3 && (
+                            <div className="w-6 h-6 rounded-full bg-[var(--surface-raised)] flex items-center justify-center text-xs font-medium text-[var(--foreground)] border border-[var(--surface)]">
+                              +{meeting.attendees.length - 3}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -69,7 +110,7 @@ export default async function MeetingsPage() {
         {/* Right Side: Admin Form */}
         {isAdmin && (
           <div className="w-full lg:w-1/3 shrink-0">
-            <MeetingForm />
+            <MeetingForm users={users} />
           </div>
         )}
       </div>

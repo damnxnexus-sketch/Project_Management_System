@@ -8,6 +8,7 @@ export async function createMeetingAction(formData: FormData) {
   const dateStr = formData.get('date') as string;
   const timeStr = formData.get('time') as string;
   const meetLink = formData.get('meetLink') as string;
+  const attendeeIds = formData.getAll('attendeeIds') as string[];
 
   if (!title || !dateStr || !timeStr || !meetLink) {
     return { error: 'All fields are required' };
@@ -22,12 +23,32 @@ export async function createMeetingAction(formData: FormData) {
         title,
         date: new Date(dateTimeString),
         meetLink,
+        attendees: {
+          connect: attendeeIds.map(id => ({ id }))
+        }
       },
     });
 
+    // Create notifications for all attendees
+    if (attendeeIds.length > 0) {
+      await Promise.all(
+        attendeeIds.map(userId =>
+          prisma.notification.create({
+            data: {
+              userId,
+              type: 'meeting_scheduled',
+              title: `Meeting: ${title}`,
+              message: `You have been assigned to meeting "${title}" on ${new Date(dateTimeString).toLocaleDateString()}`,
+            },
+          })
+        )
+      );
+    }
+
     revalidatePath('/meetings');
     return { success: true };
-  } catch (error) {
+  } catch (_error) {
+    console.error('Error creating meeting:', _error);
     return { error: 'Failed to create meeting' };
   }
 }
@@ -39,7 +60,7 @@ export async function deleteMeetingAction(meetingId: string) {
     });
     revalidatePath('/meetings');
     return { success: true };
-  } catch (error) {
+  } catch {
     return { error: 'Failed to delete meeting' };
   }
 }

@@ -23,6 +23,7 @@ model User {
   notifications Notification[] @relation("UserNotifications")
   activityLogs  ActivityLog[] @relation("UserActivityLogs")
   workUpdates   WorkUpdate[] @relation("UserWorkUpdates")
+  meetings      Meeting[]    @relation("MeetingAttendees")
 }
 
 model Task {
@@ -64,6 +65,7 @@ model Meeting {
   title     String
   date      DateTime
   meetLink  String
+  attendees User[]   @relation("MeetingAttendees")
   createdAt DateTime @default(now())
 }
 
