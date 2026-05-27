@@ -18,7 +18,7 @@ const navItems = [
   { name: 'Team', href: '/admin', icon: Users },
   { name: 'Allotment', href: '/allotment', icon: CalendarCheck },
   { name: 'Meetings', href: '/meetings', icon: Video },
-  { name: 'AI Insights', href: '#', icon: Sparkles },
+  { name: 'AI Insights', href: '/ai-insights', icon: Sparkles },
 ];
 
 export function Sidebar() {
