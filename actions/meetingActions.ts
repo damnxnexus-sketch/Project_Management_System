@@ -14,20 +14,59 @@ export async function createMeetingAction(formData: FormData) {
     return { error: 'All fields are required' };
   }
 
-  // Combine date and time into a single DateTime
   const dateTimeString = `${dateStr}T${timeStr}:00`;
-  
+
   try {
-    await prisma.meeting.create({
+    // ─── FIX ───────────────────────────────────────────────────────────────────
+    // Prisma is resolving the ambiguous create input to MeetingUncheckedCreateInput,
+    // which only accepts raw scalar foreign-key fields — not relation objects like
+    // `attendees: { connect: ... }`. This happens when the relation isn't declared
+    // cleanly enough for Prisma to pick MeetingCreateInput automatically.
+    //
+    // Solution A (recommended): explicitly type the data object as MeetingCreateInput
+    // so Prisma uses the relational variant and accepts `attendees: { connect }`.
+    //
+    // Solution B (fallback, no schema change needed): create the meeting first, then
+    // connect attendees in a separate update — works regardless of which input type
+    // Prisma resolves to.
+    //
+    // Uncomment whichever matches your Prisma schema setup:
+
+    // ── Solution A — explicit type cast (use if `attendees` IS on Meeting model) ──
+    //
+    // import type { Prisma } from '@prisma/client';
+    //
+    // const meetingData: Prisma.MeetingCreateInput = {
+    //   title,
+    //   date: new Date(dateTimeString),
+    //   meetLink,
+    //   attendees: {
+    //     connect: attendeeIds.map(id => ({ id })),
+    //   },
+    // };
+    // await prisma.meeting.create({ data: meetingData });
+
+    // ── Solution B — two-step create + update (safe fallback) ────────────────
+    const meeting = await prisma.meeting.create({
       data: {
         title,
         date: new Date(dateTimeString),
         meetLink,
-        attendees: {
-          connect: attendeeIds.map(id => ({ id }))
-        }
       },
     });
+
+    // Connect attendees via explicit update, bypassing the ambiguous create input
+    if (attendeeIds.length > 0) {
+      await prisma.meeting.update({
+        where: { id: meeting.id },
+        data: {
+          attendees: {
+            connect: attendeeIds.map(id => ({ id })),
+          },
+        },
+      });
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     // Create notifications for all attendees
     if (attendeeIds.length > 0) {
@@ -55,12 +94,25 @@ export async function createMeetingAction(formData: FormData) {
 
 export async function deleteMeetingAction(meetingId: string) {
   try {
+    // Delete relation records in the join table before deleting the meeting,
+    // otherwise Prisma will throw a foreign key constraint error.
+    await prisma.meeting.update({
+      where: { id: meetingId },
+      data: {
+        attendees: {
+          set: [], // disconnect all attendees first
+        },
+      },
+    });
+
     await prisma.meeting.delete({
       where: { id: meetingId },
     });
+
     revalidatePath('/meetings');
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error('Error deleting meeting:', error);
     return { error: 'Failed to delete meeting' };
   }
 }
