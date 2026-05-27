@@ -85,10 +85,10 @@ export function ProjectHealthScore({
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="8"
-                    strokeDasharray={`${2 * Math.PI * 56}`}
-                    initial={{ strokeDashoffset: `${2 * Math.PI * 56}` }}
+                    strokeDasharray={2 * Math.PI * 56}
+                    initial={{ strokeDashoffset: 2 * Math.PI * 56 }}
                     animate={{
-                      strokeDashoffset: `${2 * Math.PI * 56 * (1 - healthScore / 100)}`,
+                      strokeDashoffset: 2 * Math.PI * 56 * (1 - healthScore / 100),
                     }}
                     transition={{ duration: 1.5, ease: 'easeOut' }}
                     className={`${getHealthColor(healthScore)}`}
