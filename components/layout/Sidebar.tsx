@@ -11,6 +11,7 @@ import { logoutAction } from '@/actions/authActions';
 
 const navItems = [
   { name: 'Overview', href: '/', icon: LayoutDashboard },
+  { name: 'Tasks', href: '/tasks', icon: CheckSquare },
   { name: 'Projects', href: '/projects', icon: FolderKanban },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
   { name: 'Search', href: '/search', icon: Search },
