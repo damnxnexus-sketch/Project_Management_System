@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { updateTaskProgress, updateTaskStatus, deleteTask } from '@/actions/taskActions';
 import { Task } from '@/types';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Calendar } from 'lucide-react';
 import { useTransition } from 'react';
 
 interface ProjectTaskCardProps {
@@ -14,6 +14,18 @@ interface ProjectTaskCardProps {
 export function ProjectTaskCard({ task, isAdmin }: ProjectTaskCardProps) {
   const [progress, setProgress] = React.useState(task.progress);
   const [isPending, startTransition] = useTransition();
+
+  const createdAt = (task as any).createdAt as string | Date | undefined;
+  const dueDate = (task as any).dueDate as string | Date | undefined;
+
+  const formatDate = (d?: string | Date) => {
+    if (!d) return null;
+    try {
+      return new Date(d).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch (e) {
+      return null;
+    }
+  };
 
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value);
@@ -74,6 +86,20 @@ export function ProjectTaskCard({ task, isAdmin }: ProjectTaskCardProps) {
             <span className="truncate max-w-[100px]">{task.assignee.name}</span>
           </div>
         )}
+      </div>
+
+      {/* Allotment / Extension dates */}
+      <div className="flex items-center justify-between text-sm text-[var(--muted)] mb-3">
+        <div className="flex items-center gap-2">
+          <Calendar size={14} />
+          <span>
+            Allotted: {formatDate(createdAt) ?? '—'}
+          </span>
+        </div>
+        <div className="text-right">
+          <span className="font-medium">Extended until</span>
+          <div className="text-sm">{formatDate(dueDate) ?? '—'}</div>
+        </div>
       </div>
 
       <div className="mt-4">

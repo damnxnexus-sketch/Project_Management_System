@@ -19,6 +19,8 @@ export interface Task {
   priority: TaskPriority;
   assigneeId?: string;
   dueDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
   aiRisk?: boolean; // If true, indicates 'High Risk of Delay'
   progress: number;
   projectId?: string;
