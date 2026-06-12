@@ -30,3 +30,25 @@ export async function createUserAction(formData: FormData) {
   revalidatePath('/admin');
   return { success: true };
 }
+
+export async function deleteUserAction(userId: string) {
+  try {
+    const session = await (await import('@/lib/auth')).getSession();
+    if (!session) return { error: 'Unauthorized' };
+
+    // Only Master Admins can delete users
+    if (session.role !== 'Master Admin') return { error: 'Unauthorized' };
+
+    // Prevent deleting yourself via this action
+    if (session.userId === userId) return { error: 'You cannot delete your own account' };
+
+    await prisma.user.delete({ where: { id: userId } });
+
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('Failed to delete user:', msg);
+    return { error: msg || 'Failed to delete user' };
+  }
+}

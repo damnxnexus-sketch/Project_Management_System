@@ -8,8 +8,9 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Role } from '@/types';
 import { ShieldAlert, Plus, Mail, User as UserIcon } from 'lucide-react';
-import { createUserAction } from '@/actions/adminActions';
+import { createUserAction, deleteUserAction } from '@/actions/adminActions';
 import { useTransition } from 'react';
+import { toast } from '@/lib/toast';
 
 type UserData = { id: string; name: string; email: string; role: string; avatar: string | null };
 
@@ -24,6 +25,7 @@ export function TeamManagementClient({ users, isMasterAdmin }: TeamManagementCli
   const [newName, setNewName] = React.useState('');
   const [newEmail, setNewEmail] = React.useState('');
   const [newRole, setNewRole] = React.useState<Role>('Worker');
+  const [deletingId, setDeletingId] = React.useState<string | null>(null);
 
   const handleCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -106,6 +108,31 @@ export function TeamManagementClient({ users, isMasterAdmin }: TeamManagementCli
                   </Badge>
                 </td>
                 <td className="px-6 py-4">{user.email}</td>
+                <td className="px-6 py-4 text-right">
+                  {isMasterAdmin && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      onClick={() => {
+                        const ok = confirm(`Delete user ${user.name} (${user.email})? This action is permanent.`);
+                        if (!ok) return;
+                        setDeletingId(user.id);
+                        startTransition(async () => {
+                          const res = await deleteUserAction(user.id);
+                          setDeletingId(null);
+                          if (res?.error) {
+                            toast.error(res.error || 'Failed to delete user');
+                          } else {
+                            toast.success('User deleted');
+                          }
+                        });
+                      }}
+                    >
+                      {deletingId === user.id ? 'Deleting...' : 'Delete'}
+                    </Button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
