@@ -20,8 +20,14 @@ export default async function TaskDetailPage({ params }: Props) {
 
   const userId = (session as Record<string, string>).userId;
 
+  const id = params?.id;
+  if (!id) {
+    // no id provided in route params - redirect to tasks index
+    redirect('/tasks');
+  }
+
   const task = await prisma.task.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       assignee: true,
       project: true,

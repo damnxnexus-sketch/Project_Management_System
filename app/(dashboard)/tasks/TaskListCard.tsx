@@ -1,4 +1,5 @@
-import Link from 'next/link';
+"use client";
+
 import React from 'react';
 import { Calendar, User } from 'lucide-react';
 
@@ -14,14 +15,9 @@ export default function TaskListCard({ task }: { task: any }) {
 
   return (
     <div className="rounded-xl border border-[var(--border-color)] bg-[var(--surface-raised)] p-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h4 className="text-lg font-semibold text-[var(--foreground)]">{task.title}</h4>
-          <p className="text-sm text-[var(--muted)] mt-1">{task.description}</p>
-        </div>
-        <div className="text-right text-sm">
-          <Link href={`/tasks/${task.id}`} className="text-[var(--accent)] hover:underline">Open</Link>
-        </div>
+      <div>
+        <h4 className="text-lg font-semibold text-[var(--foreground)]">{task.title}</h4>
+        <p className="text-sm text-[var(--muted)] mt-1">{task.description}</p>
       </div>
 
       <div className="flex items-center justify-between mt-4 text-xs text-[var(--muted)]">
